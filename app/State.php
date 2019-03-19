@@ -10,4 +10,11 @@ class State extends Model
         'state',
         'country_id',
     ];
+
+    public $timestamps = false;
+
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
+    }
 }

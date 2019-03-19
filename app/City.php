@@ -10,4 +10,11 @@ class City extends Model
         'city',
         'state_id',
     ];
+
+    public $timestamps = false;
+
+    public function state()
+    {
+        return $this->belongsTo('App\State');
+    }
 }

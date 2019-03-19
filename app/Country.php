@@ -10,4 +10,16 @@ class Country extends Model
         'code',
         'country',
     ];
+
+    public $timestamps = false;
+
+    public function states()
+    {
+        return $this->hasMany('App\State');
+    }
+
+    public function cities()
+    {
+        return $this->hasManyThrough('App\City', 'App\State');
+    }
 }
