@@ -18,7 +18,7 @@ class CreateFileablesTable extends Migration
             $table->integer('file_id')->unsigned();
             $table->integer('fileable_id');
             $table->string('fileable_type');
-            $table->timestamps();
+            $table->string('description')->nullable();
 
             $table->foreign('file_id')->references('id')->on('files');
         });
