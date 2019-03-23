@@ -27,6 +27,9 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
+
+        $role = $user->roles()->first()->name;
+
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
 
@@ -40,6 +43,7 @@ class AuthController extends Controller
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
+            'role' => $role,
         ]);
     }
 
@@ -55,6 +59,8 @@ class AuthController extends Controller
     public function signup_client(SignUpClient $request)
     {
         $user = User::create($request->all());
+
+        $user->assignRole($request->role);
 
         if ($request->profile_photo) {
             $this->uploadProfilePhoto($user, $request->profile_photo);
