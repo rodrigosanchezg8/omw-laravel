@@ -22,13 +22,11 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized',
+                'message' => ['Usuario no autorizado'],
             ], 400);
         }
 
         $user = $request->user();
-
-        $role = $user->roles()->first()->name;
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -40,11 +38,13 @@ class AuthController extends Controller
         $token->save();
 
         return response()->json([
+            'header' => 'Éxito',
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
+            'status' => 200,
             'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
-            'role' => $role,
-        ]);
+            'user' => $user->load('roles')
+        ], 200);
     }
 
     public function logout(Request $request)
