@@ -11,19 +11,20 @@ class File extends Model
     protected $fillable = [
         'name',
         'path',
-        'cloud_path',
+        'fileable_id',
+        'fileable_type',
+        'description',
         'status',
     ];
 
     public $timestamps = false;
 
-    public function upload_profile_photo($model, $image)
+    public static function upload_profile_photo($model, $base64)
     {
         $url = 'public/profile_photos/' . $model->id . '_profile_photo.jpg';
+        Storage::disk('local')->put($url, file_get_contents($base64));
 
-        Storage::disk('local')->put($url, $image);
-
-        DB::table('files')->insert([
+        File::create([
             'name' => $model->id . '_profile_photo',
             'path' => $url,
             'fileable_id' => $model->id,

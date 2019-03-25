@@ -12,6 +12,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -57,20 +58,24 @@ class AuthController extends Controller
 
     public function signup_client(SignUpClient $request)
     {
-        $user = User::create($request->all());
-        $user->city()->associate($request->city_id);
+        try {
+            $user = User::create($request->all());
+            $user->city()->associate($request->city_id);
 
-        $user->assignRole($request->role['name']);
+            $user->assignRole($request->role['name']);
 
-        if ($request->profile_image)
-            File::upload_profile_photo($user, $request->profile_image);
+            if ($request->profile_image)
+                File::upload_profile_photo($user, $request->profile_image);
 
-        return response()->json([
-            'status' => 200,
-            'header' => 'Éxito',
-            'message' => 'Usuario creado.',
-            'user' => $user,
-        ]);
+            return response()->json([
+                'status' => 200,
+                'header' => 'Éxito',
+                'message' => 'Usuario creado.',
+                'user' => $user,
+            ]);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 
     public function signup_company(SignUpCompany $request)
