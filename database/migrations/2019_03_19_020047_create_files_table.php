@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFileablesTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateFileablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fileables', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('file_id')->unsigned();
+            $table->string('name');
+            $table->string('path');
             $table->integer('fileable_id');
             $table->string('fileable_type');
             $table->string('description')->nullable();
-
-            $table->foreign('file_id')->references('id')->on('files');
         });
     }
 

@@ -17,4 +17,10 @@ class State extends Model
     {
         return $this->belongsTo('App\Country');
     }
+
+    public function cities()
+    {
+        return $this->hasMany('App\City', 'state_id');
+    }
+
 }

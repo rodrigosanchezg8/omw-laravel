@@ -29,8 +29,8 @@ class SignUpClient extends FormRequest
             'email' => 'required|email',
             'phone' => 'required|digits:10',
             'password' => 'required|confirmed',
-            'role' => 'required|string',
-            'city_id' => 'digits:1',
+            'role.name' => 'required|string',
+            'city.id' => 'digits:1',
             'birth_date' => 'date_format:Y-m-d',
             'profile_photo' => 'image',
         ];
