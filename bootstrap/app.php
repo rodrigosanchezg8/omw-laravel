@@ -11,6 +11,16 @@
 |
 */
 
+// TEMPORAL BECAUSE OF CORS
+header('Access-Control-Allow-Origin: *');
+header('Vary: Origin');
+
+if (PHP_SAPI != 'cli') {
+    header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE, HEAD');
+    header('Allow: POST, GET, OPTIONS, PUT, DELETE, HEAD');
+    header('Access-Control-Allow-Headers: X-Requested-With, Content-Type, Authorization');
+}
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
