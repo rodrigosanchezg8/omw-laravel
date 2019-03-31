@@ -33,4 +33,11 @@ class File extends Model
         ]);
     }
 
+    public static function delete_profile_photo($url)
+    {
+        Storage::disk('local')->delete($url);
+
+        File::where('path', $url)->delete();
+    }
+
 }

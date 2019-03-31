@@ -29,8 +29,8 @@ class SignUpClient extends FormRequest
             'email' => 'required|email',
             'phone' => 'required|digits:10',
             'password' => 'required|confirmed',
-            'role.name' => 'required|string',
-            'city.id' => 'digits:1',
+            'role' => 'required|string',
+            'city_id' => 'digits:1',
             'birth_date' => 'date_format:Y-m-d',
             'profile_photo' => 'image',
         ];
@@ -48,7 +48,8 @@ class SignUpClient extends FormRequest
             'role.required' => 'Debe proporcionar un rol para el usuario',
             'phone.required' => 'El telefono del usuario es requerido',
             'phone.digits' => 'El telefono debe contener unicamente 10 digitos',
-            'city_id.required' => 'La ciudad del usuario no es valida',
+            'city_id.digits' => 'La ciudad ingresada tiene que ser un numero entero',
+            'birth_date.date_format' => 'La fecha ingresada no es valida',
             'profile_photo.image' => 'La foto de perfil debe ser una imagen valida',
         ];
     }

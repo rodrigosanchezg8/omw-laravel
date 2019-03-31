@@ -52,7 +52,7 @@ class AuthController extends Controller
         $request->user()->token()->revoke();
 
         return response()->json([
-            'message' => 'Se ha cerrado sesión.',
+            'message' => 'Session has been closed',
         ]);
     }
 
@@ -62,10 +62,11 @@ class AuthController extends Controller
             $user = User::create($request->all());
             $user->city()->associate($request->city_id);
 
-            $user->assignRole($request->role['name']);
+            $user->assignRole($request->role);
 
-            if ($request->profile_image)
+            if ($request->profile_image) {
                 File::upload_profile_photo($user, $request->profile_image);
+            }
 
             return response()->json([
                 'status' => 200,
@@ -82,8 +83,9 @@ class AuthController extends Controller
     {
         $company = Company::create($request->all());
 
-        if ($request->profile_image)
-            File::upload_profile_photo($company, $request->profile_image);
+        if ($request->profile_image) {
+            File::upload_profile_photo($company, $request->profile_image);    
+        }
 
         return response()->json([
             'message' => 'Compañia creada exitosamente.',

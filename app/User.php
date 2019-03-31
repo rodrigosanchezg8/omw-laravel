@@ -42,6 +42,13 @@ class User extends Authenticatable
 
     protected $guard_name = 'api';
 
+    public function scopeRoleFilter($query, $role)
+    {
+        return $query->whereHas('roles', function ($q) use($role) {
+            $q->where('name', $role);
+        });
+    }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
@@ -62,8 +69,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Company');
     }
 
+    public function profilePhoto()
+    {
+        return $this->files()->where('description', 'profile_image')->first();
+    }
+
     public function files()
     {
-        return $this->morphToMany('App\File', 'fileable');
+        return $this->morphMany('App\File', 'fileable');
     }
 }
