@@ -19,6 +19,9 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('signup_company', 'AuthController@signup_company');
     Route::get('states_municipalities', 'StatesController@get_states_municipalities');
 
+    Route::get('delivery_man/service_ranges', 'DeliveryManController@get_service_ranges');
+    Route::resource('delivery_man', 'DeliveryManController');
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
