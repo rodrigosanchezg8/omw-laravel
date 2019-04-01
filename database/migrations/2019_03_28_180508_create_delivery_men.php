@@ -13,7 +13,7 @@ class CreateDeliveryMans extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_mans', function (Blueprint $table) {
+        Schema::create('delivery_men', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('service_range_id')->unsigned();
@@ -32,6 +32,6 @@ class CreateDeliveryMans extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_mans');
+        Schema::dropIfExists('delivery_men');
     }
 }
