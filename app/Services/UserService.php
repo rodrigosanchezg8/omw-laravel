@@ -13,13 +13,14 @@ class UserService
         $this->companyService = $companyService;
     }
 
-    public function list()
+    public function list($role)
     {
         return User::with([
             'roles',
             'company',
             'city',
-        ])->get();
+        ])->roleFilter($role)
+            ->get();
     }
 
     public function store($data)
@@ -42,7 +43,9 @@ class UserService
         return User::with([
             'roles',
             'company',
-            'city',
+            'city' => function ($query) {
+                return $query->with('state');
+            },
         ])->find($user_id);
     }
 

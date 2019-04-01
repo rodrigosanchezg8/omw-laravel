@@ -15,13 +15,11 @@ class UserController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $list = $this->service->list();
-
-            return response()->json(['list' => $list]);
+            return response()->json($this->service->list($request->role));
 
         } catch (\Exception $e) {
 
@@ -59,8 +57,8 @@ class UserController extends Controller
         try {
 
             $user = $this->service->getDetailedUser($user_id);
-            
-            return response()->json(['user' => $user]);
+
+            return response()->json($user);
 
         } catch (\Exception $e) {
 

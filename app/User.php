@@ -30,6 +30,11 @@ class User extends Authenticatable
         'birth_date',
     ];
 
+    protected $appends = [
+        'full_name',
+        'profile_photo',
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -44,9 +49,22 @@ class User extends Authenticatable
 
     public function scopeRoleFilter($query, $role)
     {
-        return $query->whereHas('roles', function ($q) use($role) {
+        return $query->whereHas('roles', function ($q) use ($role) {
             $q->where('name', $role);
         });
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getProfilePhotoAttribute()
+    {
+        $photo = $this->files()->where('description', 'profile_image')->first();
+        if ($photo)
+            return "$photo->path/$photo->name";
+        return null;
     }
 
     public function setPasswordAttribute($password)
