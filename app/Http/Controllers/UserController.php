@@ -38,7 +38,9 @@ class UserController extends Controller
             $user = $this->service->store($request->all());
 
             return response()->json([
-                'status' => 'success',
+                'status' => 200,
+                'header' => 'Éxito',
+                'message' => 'Usuario creado.',
                 'user' => $user,
             ]);
 
@@ -75,7 +77,12 @@ class UserController extends Controller
         try {
             $this->service->update($user, $request->all());
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'status' => 200,
+                'header' => 'Éxito',
+                'message' => 'Usuario actualizado.',
+                'user' => $user,
+            ]);
 
         } catch (\Exception $e) {
 

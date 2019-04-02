@@ -26,8 +26,9 @@ class UserService
     public function store($data)
     {
         $user = User::create($data);
+        $user->city()->associate($data->city_id);
 
-        $user->assignRole(config('constants.roles.client'));
+        $user->assignRole($data->role);
 
         if (isset($data['profile_photo'])) {
 
@@ -52,6 +53,8 @@ class UserService
     public function update(User $user, $data)
     {
         $user->update($data);
+        $user->city()->dissociate();
+        $user->city()->associate($data->city_id);
 
         if (isset($data['profile_photo'])) {
             if ($user->profilePhoto()) {
