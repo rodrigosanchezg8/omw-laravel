@@ -19,18 +19,34 @@ class File extends Model
 
     public $timestamps = false;
 
-    public static function upload_profile_photo($model, $base64)
+    public static function upload_file($model, $base64, $name)
     {
-        $url = 'public/profile_photos/' . $model->id . '_profile_photo.jpg';
-        Storage::disk('local')->put($url, file_get_contents($base64));
+        $folder = $name . 's';
+        $file_name = $model->id . '_' . $name . '.' . File::get_base_64_extension($base64);
+        Storage::disk('public')->put($folder . '/' . $file_name, file_get_contents($base64));
 
         File::create([
-            'name' => $model->id . '_profile_photo',
-            'path' => $url,
+            'name' => $file_name,
+            'path' => $folder,
             'fileable_id' => $model->id,
             'fileable_type' => get_class($model),
-            'description' => 'profile_image',
+            'description' => $name
         ]);
+    }
+
+    public static function delete_file($url)
+    {
+        Storage::disk('local')->delete($url);
+
+        File::where('path', $url)->delete();
+    }
+
+    private static function get_base_64_extension($uri)
+    {
+        $img = explode(',', $uri);
+        $ini = substr($img[0], 11);
+        $type = explode(';', $ini);
+        return $type[0];
     }
 
 }

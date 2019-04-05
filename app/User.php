@@ -30,6 +30,12 @@ class User extends Authenticatable
         'birth_date',
     ];
 
+    protected $appends = [
+        'full_name',
+        'profile_photo',
+        'role'
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -41,6 +47,30 @@ class User extends Authenticatable
     ];
 
     protected $guard_name = 'api';
+
+    public function scopeRoleFilter($query, $role)
+    {
+        return $query->whereHas('roles', function ($q) use ($role) {
+            $q->where('name', $role);
+        });
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getProfilePhotoAttribute()
+    {
+        $photo = $this->files()->where('description', 'profile_photo')->first();
+        return $photo ? "$photo->path/$photo->name" . '?date=' . date('Y_m_d_H_i_s') : null;
+    }
+
+    public function getRoleAttribute()
+    {
+        $role = $this->roles()->first();
+        return $role ? $role : null;
+    }
 
     public function setPasswordAttribute($password)
     {
@@ -62,8 +92,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Company');
     }
 
+    public function profilePhoto()
+    {
+        return $this->files()->where('description', 'profile_photo')->first();
+    }
+
     public function files()
     {
-        return $this->morphToMany('App\File', 'fileable');
+        return $this->morphMany('App\File', 'fileable');
     }
 }

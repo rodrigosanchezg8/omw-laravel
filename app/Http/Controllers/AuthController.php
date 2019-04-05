@@ -6,7 +6,7 @@ use App\Company;
 
 use App\File;
 use App\Http\Requests\Login;
-use App\Http\Requests\SignUpClient;
+use App\Http\Requests\UserStore;
 use App\Http\Requests\SignUpCompany;
 use App\User;
 use Carbon\Carbon;
@@ -43,7 +43,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'status' => 200,
             'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
-            'user' => $user->load('roles')
+            'user' => $user
         ], 200);
     }
 
@@ -52,38 +52,17 @@ class AuthController extends Controller
         $request->user()->token()->revoke();
 
         return response()->json([
-            'message' => 'Se ha cerrado sesión.',
+            'message' => 'Session has been closed',
         ]);
-    }
-
-    public function signup_client(SignUpClient $request)
-    {
-        try {
-            $user = User::create($request->all());
-            $user->city()->associate($request->city_id);
-
-            $user->assignRole($request->role['name']);
-
-            if ($request->profile_image)
-                File::upload_profile_photo($user, $request->profile_image);
-
-            return response()->json([
-                'status' => 200,
-                'header' => 'Éxito',
-                'message' => 'Usuario creado.',
-                'user' => $user,
-            ]);
-        } catch (\Exception $e) {
-            Log::info($e->getMessage());
-        }
     }
 
     public function signup_company(SignUpCompany $request)
     {
         $company = Company::create($request->all());
 
-        if ($request->profile_image)
-            File::upload_profile_photo($company, $request->profile_image);
+        if ($request->profile_photo) {
+            File::upload_file($company, $request->profile_photo, 'profile_photo');
+        }
 
         return response()->json([
             'message' => 'Compañia creada exitosamente.',
