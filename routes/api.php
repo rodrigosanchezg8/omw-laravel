@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
-    Route::post('signup_client', 'AuthController@signup_client');
     Route::post('signup_company', 'AuthController@signup_company');
     Route::get('states_municipalities', 'StatesController@get_states_municipalities');
 

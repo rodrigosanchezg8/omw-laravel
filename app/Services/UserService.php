@@ -26,13 +26,13 @@ class UserService
     public function store($data)
     {
         $user = User::create($data);
-        $user->city()->associate($data->city_id);
+        $user->city()->associate($data['city_id']);
 
-        $user->assignRole($data->role);
+        $user->assignRole($data['role']['name']);
 
-        if (isset($data['profile_photo'])) {
+        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
 
-            File::upload_profile_photo($user, $data['profile_photo']);
+            File::upload_file($user, $data['profile_photo'], 'profile_photo');
 
         }
 
@@ -54,16 +54,17 @@ class UserService
     {
         $user->update($data);
         $user->city()->dissociate();
-        $user->city()->associate($data->city_id);
+        $user->city()->associate($data['city']['id']);
 
-        if (isset($data['profile_photo'])) {
+        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
             if ($user->profilePhoto()) {
-                File::delete_profile_photo($user->profilePhoto()->path);
+                File::delete_file($user->profilePhoto()->path . $user->profilePhoto()->name);
             }
 
-            File::upload_profile_photo($user, $data['profile_photo']);
+            File::upload_file($user, $data['profile_photo'], 'profile_photo');
         }
     }
+
 
     public function delete(User $user)
     {
@@ -74,7 +75,7 @@ class UserService
         }
 
         if ($user->profilePhoto()) {
-            File::delete_profile_photo($user->profilePhoto()->path);
+            File::delete_file($user->profilePhoto()->path);
         }
 
         $user->delete();

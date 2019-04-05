@@ -25,7 +25,7 @@ class Company extends Model
 
     public function profilePhoto()
     {
-        return $this->files()->where('description', 'profile_image')->first();
+        return $this->files()->where('description', 'profile_photo')->first();
     }
 
     public function files()

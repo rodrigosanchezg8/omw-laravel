@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClientStore;
-use App\Http\Requests\ClientUpdate;
-use App\Services\UserService;
+use App\Http\Requests\UserStore;
+use App\Http\Requests\UserUpdate;
 use App\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -31,7 +31,7 @@ class UserController extends Controller
         }
     }
 
-    public function store(ClientStore $request)
+    public function store(UserStore $request)
     {
         try {
 
@@ -41,7 +41,7 @@ class UserController extends Controller
                 'status' => 200,
                 'header' => 'Éxito',
                 'message' => 'Usuario creado.',
-                'user' => $user,
+                'user' => $user
             ]);
 
         } catch (Exception $e) {
@@ -72,7 +72,7 @@ class UserController extends Controller
         }
     }
 
-    public function update(User $user, ClientUpdate $request)
+    public function update(User $user, UserUpdate $request)
     {
         try {
             $this->service->update($user, $request->all());
@@ -81,7 +81,7 @@ class UserController extends Controller
                 'status' => 200,
                 'header' => 'Éxito',
                 'message' => 'Usuario actualizado.',
-                'user' => $user,
+                'user' => $user
             ]);
 
         } catch (\Exception $e) {

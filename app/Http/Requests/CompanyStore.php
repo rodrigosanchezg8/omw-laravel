@@ -19,7 +19,7 @@ class CompanyStore extends FormRequest
             'name' => 'required',
             'description' => 'required',
             'city_id' => 'digits:1',
-            'profile_image' => 'image',
+            'profile_photo' => 'image',
         ];
     }
 
@@ -31,7 +31,7 @@ class CompanyStore extends FormRequest
             'name.required' => 'El nombre de la empresa es requerido',
             'description.required' => 'La descripcion de la empresa es requerida',
             'city_id.digits' => 'La ciudad que intenta registrar no es valida',
-            'profile_image.image' => 'La foto de perfil de la empresa tiene que ser una imagen valida',
+            'profile_photo.image' => 'La foto de perfil de la empresa tiene que ser una imagen valida',
         ];
     }
 }

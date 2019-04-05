@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClientUpdate extends FormRequest
+class UserUpdate extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,10 +19,9 @@ class ClientUpdate extends FormRequest
             'email' => 'email',
             'phone' => 'digits:10',
             'password' => 'string',
-            'city_id' => 'digits:1',
+            'city_id' => 'numeric',
             'status' => 'digits:1',
             'birth_date' => 'date_format:Y-m-d',
-            'profile_photo' => 'image',
         ];
     }
 
@@ -37,7 +36,6 @@ class ClientUpdate extends FormRequest
             'city_id.digits' => 'La ciudad del usuario tiene que ser un numero entero',
             'status.digits' => 'La ciudad del usuario tiene que ser un numero entero',
             'birth_date.date_format' => 'La fecha del usuario deberia tener un formato YY-mm-dd',
-            'profile_photo.image' => 'La foto de perfil debe ser una imagen valida',
         ];
     }
 }

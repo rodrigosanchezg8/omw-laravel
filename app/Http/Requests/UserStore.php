@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SignUpClient extends FormRequest
+class UserStore extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,11 +29,9 @@ class SignUpClient extends FormRequest
             'email' => 'required|email',
             'phone' => 'required|digits:10',
             'password' => 'required|confirmed',
-            'role' => 'required',
             'role.name' => 'required|string',
             'city_id' => 'numeric',
-            'birth_date' => 'date_format:Y-m-d',
-            'profile_photo' => 'image',
+            'birth_date' => 'date:Y-m-d',
         ];
     }
 
@@ -52,7 +50,6 @@ class SignUpClient extends FormRequest
             'phone.digits' => 'El telefono debe contener unicamente 10 digitos',
             'city_id.digits' => 'La ciudad ingresada tiene que ser un numero entero',
             'birth_date.date_format' => 'La fecha ingresada no es valida',
-            'profile_photo.image' => 'La foto de perfil debe ser una imagen valida',
         ];
     }
 }

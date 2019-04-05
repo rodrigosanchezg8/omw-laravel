@@ -22,10 +22,8 @@ class CompanyService
         $user->roles()->detach();
         $user->assignRole(config('constants.roles.company'));
 
-        if (isset($data['profile_image'])) {
-
-            File::upload_profile_photo($company, $data['profile_image']);
-
+        if (isset($data['profile_photo'])) {
+            File::upload_file($company, $data['profile_photo'], 'profile_photo');
         }
 
         return $company;
@@ -43,12 +41,12 @@ class CompanyService
     {
         $company->update($data);
 
-        if (isset($data['profile_image'])) {
+        if (isset($data['profile_photo'])) {
             if ($company->profilePhoto()) {
-                File::delete_profile_photo($company->profilePhoto()->path);
+                File::delete_file($company->profilePhoto()->path);
             }
 
-            File::upload_profile_photo($company, $data['profile_image']);
+            File::upload_file($company, $data['profile_photo'], 'profile_photo');
         }
     }
 
@@ -60,7 +58,7 @@ class CompanyService
         $user->assignRole(config('constants.roles.client'));
 
         if ($company->profilePhoto()) {
-            File::delete_profile_photo($company->profilePhoto()->path);
+            File::delete_file($company->profilePhoto()->path);
         }
 
         $company->delete();

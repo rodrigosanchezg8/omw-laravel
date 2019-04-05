@@ -33,6 +33,7 @@ class User extends Authenticatable
     protected $appends = [
         'full_name',
         'profile_photo',
+        'role'
     ];
 
     /**
@@ -61,10 +62,14 @@ class User extends Authenticatable
 
     public function getProfilePhotoAttribute()
     {
-        $photo = $this->files()->where('description', 'profile_image')->first();
-        if ($photo)
-            return "$photo->path/$photo->name";
-        return null;
+        $photo = $this->files()->where('description', 'profile_photo')->first();
+        return $photo ? "$photo->path/$photo->name" . '?date=' . date('Y_m_d_H_i_s') : null;
+    }
+
+    public function getRoleAttribute()
+    {
+        $role = $this->roles()->first();
+        return $role ? $role : null;
     }
 
     public function setPasswordAttribute($password)
@@ -89,7 +94,7 @@ class User extends Authenticatable
 
     public function profilePhoto()
     {
-        return $this->files()->where('description', 'profile_image')->first();
+        return $this->files()->where('description', 'profile_photo')->first();
     }
 
     public function files()

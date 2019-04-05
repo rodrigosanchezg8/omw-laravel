@@ -18,7 +18,7 @@ class CompanyUpdate extends FormRequest
             'name' => 'string',
             'description' => 'string',
             'city_id' => 'digits:1',
-            'profile_image' => 'image',
+            'profile_photo' => 'image',
         ];
     }
 
@@ -29,7 +29,7 @@ class CompanyUpdate extends FormRequest
             'name.string' => 'El nombre ingresado no es valido',
             'description.string' => 'La descripcion ingresada no es valida',
             'city_id.digits' => 'La ciudad que intenta registrar no es valida',
-            'profile_image' => 'La foto de perfil de la empresa tiene que ser una imagen valida',
+            'profile_photo' => 'La foto de perfil de la empresa tiene que ser una imagen valida',
         ];
     }
 }
