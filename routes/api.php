@@ -18,13 +18,17 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('signup_company', 'AuthController@signup_company');
     Route::get('states_municipalities', 'StatesController@get_states_municipalities');
 
-    Route::get('delivery_man/service_ranges', 'DeliveryManController@get_service_ranges');
-    Route::resource('delivery_man', 'DeliveryManController');
-
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });
+});
+
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('delivery_man/service_ranges', 'DeliveryManController@get_service_ranges');
+    Route::get('delivery_man/{user}', 'DeliveryManController@show');
+    Route::resource('delivery_man', 'DeliveryManController');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
@@ -39,4 +43,5 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('companies/{company}', 'CompanyController@show')->name('companies.show');
     Route::put('companies/{company}', 'CompanyController@update')->name('companies.update');
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+
 });

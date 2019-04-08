@@ -5,8 +5,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryMan extends Model
+class DeliveryManServiceOptions extends Model
 {
+
+    protected $table = 'delivery_men';
 
     protected $fillable = [
         'user_id',
