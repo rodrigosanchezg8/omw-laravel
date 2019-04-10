@@ -39,4 +39,11 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('companies/{company}', 'CompanyController@show')->name('companies.show');
     Route::put('companies/{company}', 'CompanyController@update')->name('companies.update');
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+
+    Route::get('deliveries/{delivery}/cancel', 'DeliveryController@cancel')->name('deliveries.cancel');
+});
+
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('deliveries', 'DeliveryController@index')->name('deliveries.index');
+    Route::get('deliveries/{delivery}/detail', 'DeliveryController@detail')->name('deliveries.detail');
 });
