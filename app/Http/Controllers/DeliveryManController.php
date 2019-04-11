@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\DeliveryMan;
+use App\User;
+use App\DeliveryManServiceOptions;
 use App\ServiceRange;
 use Illuminate\Http\Request;
-use App\Http\Requests\SignUpDeliveryMan;
+use App\Http\Requests\UpdateDeliveryManServiceOptions;
 
 class DeliveryManController extends Controller
 {
@@ -14,18 +15,19 @@ class DeliveryManController extends Controller
 
     }
 
-    public function store(SignUpDeliveryMan $request)
+    public function store(UpdateDeliveryManServiceOptions $request)
     {
-        DeliveryMan::create($request->all());
+        DeliveryManServiceOptions::whereUserId($request->user_id)->delete();
+        DeliveryManServiceOptions::create($request->all());
         return response()->json([
             'header' => 'Éxito',
             'status' => 200,
         ]);
     }
 
-    public function show()
+    public function show($user_id)
     {
-
+        return response()->json(DeliveryManServiceOptions::whereUserId($user_id)->first());
     }
 
 

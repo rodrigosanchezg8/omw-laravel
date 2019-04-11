@@ -101,4 +101,9 @@ class User extends Authenticatable
     {
         return $this->morphMany('App\File', 'fileable');
     }
+
+    public function deliveryManServiceOptions()
+    {
+        return $this->hasMany('App\DeliveryManServiceOptions');
+    }
 }
