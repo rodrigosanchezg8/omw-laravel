@@ -21,7 +21,7 @@ class CompanyController extends Controller
 
             $list = $this->service->list();
 
-            return response()->json(['list' => $list]);
+            return response()->json($list);
 
         } catch (\Exception $e) {
 
@@ -40,8 +40,10 @@ class CompanyController extends Controller
             $company = $this->service->store($request->all());
 
             return response()->json([
-                'status' => 'success',
+                'header' => 'Éxito',
+                'message' => 'Compañia creada.',
                 'company' => $company,
+                'status' => 200
             ]);
 
         } catch (Exception $e) {
@@ -60,7 +62,7 @@ class CompanyController extends Controller
 
             $company = $this->service->getDetailedCompany($company_id);
 
-            return response()->json(['company' => $company]);
+            return response()->json($company);
 
         } catch (\Exception $e) {
 
@@ -78,7 +80,11 @@ class CompanyController extends Controller
 
             $this->service->update($company, $request->all());
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'header' => 'Éxito',
+                'message' => 'Compañia actualizada.',
+                'status' => 200
+            ]);
 
         } catch (\Exception $e) {
 

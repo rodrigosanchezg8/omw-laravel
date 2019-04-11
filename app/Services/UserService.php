@@ -43,7 +43,11 @@ class UserService
     {
         return User::with([
             'roles',
-            'company',
+            'company' => function ($query) {
+                return $query->with(['city' => function ($query) {
+                    return $query->with('state');
+                }]);
+            },
             'city' => function ($query) {
                 return $query->with('state');
             },

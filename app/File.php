@@ -19,6 +19,16 @@ class File extends Model
 
     public $timestamps = false;
 
+    public function users()
+    {
+        return $this->morphedByMany('App\User', 'fileable');
+    }
+
+    public function companies()
+    {
+        return $this->morphedByMany('App\Company', 'fileable');
+    }
+
     public static function upload_file($model, $base64, $name)
     {
         $folder = $name . 's';
