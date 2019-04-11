@@ -14,22 +14,22 @@ class CompanyUpdate extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'digits:1',
-            'name' => 'string',
-            'description' => 'string',
-            'city_id' => 'digits:1',
-            'profile_photo' => 'image',
+            'user_id' => 'required|numeric',
+            'name' => 'required',
+            'description' => 'required',
+            'city_id' => 'required|numeric',
         ];
     }
 
     public function messages()
     {
         return [
-            'user_id.digits' => 'El usuario que intenta asignar a esta empresa no es valido',
-            'name.string' => 'El nombre ingresado no es valido',
-            'description.string' => 'La descripcion ingresada no es valida',
-            'city_id.digits' => 'La ciudad que intenta registrar no es valida',
-            'profile_photo' => 'La foto de perfil de la empresa tiene que ser una imagen valida',
+            'user_id.required' => 'El usuario que intenta asignar a esta empresa no es valido',
+            'user_id.numeric' => 'El usuario que intenta asignar a esta empresa no es valido',
+            'name.required' => 'El nombre de la empresa es requerido',
+            'description.required' => 'La descripcion de la empresa es requerida',
+            'city_id.required' => 'La ciudad de la empresa es requerida',
+            'city_id.numeric' => 'La ciudad que intenta registrar no es valida',
         ];
     }
 }

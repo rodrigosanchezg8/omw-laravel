@@ -13,6 +13,16 @@ class Company extends Model
         'city_id',
     ];
 
+    protected $appends = [
+        'profile_photo',
+    ];
+
+    public function getProfilePhotoAttribute()
+    {
+        $photo = $this->files()->where('description', 'profile_photo')->first();
+        return $photo ? "$photo->path/$photo->name" . '?date=' . date('Y_m_d_H_i_s') : null;
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');
