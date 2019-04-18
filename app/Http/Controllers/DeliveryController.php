@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Delivery;
+use App\Http\Requests\DeliveryAssignGuy;
+use App\Http\Requests\DeliveryStore;
 use App\Services\DeliveryService;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,27 @@ class DeliveryController extends Controller
             return response()->json([
                 'count' => count($list),
                 'list' => $list,
+            ]);
+
+        } catch(\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function show($delivery_id, Request $request)
+    {
+        try {
+
+            $delivery = $this->service->getDetailedDelivery($delivery_id);
+
+            return response()->json([
+                'status' => 'success',
+                'delivery' => $delivery,
             ]);
 
         } catch(\Exception $e) {
@@ -54,11 +77,52 @@ class DeliveryController extends Controller
         }
     }
 
+    public function store(DeliveryStore $request)
+    {
+        try {
+
+            $delivery = $this->service->create($request->all());
+
+            return response()->json([
+                'status' => 'success',
+                'delivery' => $delivery,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
     public function cancel(Delivery $delivery, Request $request)
     {
         try {
 
             $this->service->cancel($delivery);
+
+            return response()->json([
+                'status' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function assign_delivery_man(Delivery $delivery, DeliveryAssignGuy $request)
+    {
+        try {
+
+            $this->service->assignDeliveryMan($delivery, $request->all());
 
             return response()->json([
                 'status' => 'success'

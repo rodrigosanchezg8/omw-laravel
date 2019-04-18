@@ -15,16 +15,16 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('delivery_man_id')->unsigned();
+            $table->integer('delivery_man_id')->nullable()->unsigned();
             $table->integer('sender_id')->unsigned();
             $table->integer('receiver_id')->unsigned();
             $table->date('planned_start_date');
             $table->date('planned_end_date');
             $table->date('departure_date')->nullable();
-            $table->date('arrival_date');
+            $table->date('arrival_date')->nullable();
             $table->integer('departure_location_id')->unsigned();
             $table->integer('arrival_location_id')->unsigned();
-            $table->integer('delivery_status_id')->unsigned()->nullable();
+            $table->integer('delivery_status_id')->unsigned()->default(1);
 
             $table->foreign('delivery_man_id')->references('id')->on('users');
             $table->foreign('sender_id')->references('id')->on('users');

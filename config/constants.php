@@ -14,4 +14,22 @@ return [
         'finished' => 'Entregado',
         'cancelled' => 'Cancelado',
     ],
+
+    'distances' => [
+        'short' => 50,
+        'medium' => 125,
+        'long' => 250
+    ],
+
+    'location_types' => [
+        'fixed' => 1,
+        'variable' => 0,
+    ],
+
+    'delivery_man_statuses' => [
+        'available' => 1,
+        'bussy' => 0,
+    ],
+
+    'min_delivery_man_distance_from_origin' => '15',
 ];

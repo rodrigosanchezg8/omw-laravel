@@ -82,6 +82,13 @@ class User extends Authenticatable
         return $this->belongsTo('App\City');
     }
 
+    public function fixedLocation()
+    {
+        return $this->locations()
+                    ->where('origin', config('constants.location_types.fixed'))
+                    ->first();
+    }
+
     public function locations()
     {
         return $this->hasMany('App\Location');

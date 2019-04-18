@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DeliveryMan extends Model
 {
+    public $tablename = 'delivery_men';
 
     protected $fillable = [
         'user_id',

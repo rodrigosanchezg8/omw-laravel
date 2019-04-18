@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Delivery;
+use App\DeliveryMan;
 use App\DeliveryStatus;
-use App\Exceptions\InvalidStatusForCancelling;
 use Illuminate\Support\Facades\Auth;
 
 class DeliveryService
@@ -50,9 +50,27 @@ class DeliveryService
         return $list->get();
     }
 
+    public function create($data)
+    {
+        return Delivery::create($data);
+    }
+
+    public function getDetailedDelivery($delivery_id)
+    {
+        return Delivery::with([
+            'deliveryMan',
+            'sender',
+            'receiver',
+            'departureLocation',
+            'arrivalLocation',
+            'deliveryStatus',
+        ])->find($delivery_id);
+    }
+
     public function detail(Delivery $delivery)
     {
-        return $delivery->products;
+        return Auth::user()->hasRole('delivery_man') ? []
+                                                     : $delivery->products;
     }
 
     public function cancel(Delivery $delivery)
@@ -61,16 +79,31 @@ class DeliveryService
             $delivery->delivery_status_id == null ||
             $delivery->delivery_status_id == DeliveryStatus::notStarted()->first()->id
         ) {
+
             $delivery->delivery_status_id = DeliveryStatus::cancelled()->first()->id;
 
             $delivery->save();
+
+            $deliveryMan = DeliveryMan::find($delivery->delivery_man_id);
+
+            $deliveryMan->available = config('constants.delivery_man_statuses.bussy');
+            $deliveryMan->save();
+
         } else {
 
-            $message = "El envio solicitado no puede ser cancelado";
-
-            throw new \Exception($message, 1);
+            throw new \Exception("El envio solicitado no puede ser cancelado", 1);
 
         }
 
+    }
+
+    public function assignDeliveryMan(Delivery $delivery, $data)
+    {
+        $delivery->delivery_man_id = $data->delivery_man_id;
+
+        $deliveryMan = DeliveryMan::find($data->delivery_man_id);
+
+        $deliveryMan->available = config('constants.delivery_man_statuses.bussy');
+        $deliveryMan->save();
     }
 }
