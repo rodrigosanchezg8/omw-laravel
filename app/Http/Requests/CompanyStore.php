@@ -18,7 +18,6 @@ class CompanyStore extends FormRequest
             'user_id' => 'required|numeric',
             'name' => 'required',
             'description' => 'required',
-            'city_id' => 'required|numeric',
         ];
     }
 
@@ -29,8 +28,6 @@ class CompanyStore extends FormRequest
             'user_id.numeric' => 'El usuario que intenta asignar a esta empresa no es valido',
             'name.required' => 'El nombre de la empresa es requerido',
             'description.required' => 'La descripcion de la empresa es requerida',
-            'city_id.required' => 'La ciudad de la empresa es requerida',
-            'city_id.numeric' => 'La ciudad que intenta registrar no es valida',
         ];
     }
 }

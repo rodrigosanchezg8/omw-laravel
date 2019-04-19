@@ -20,13 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
-            $table->integer('city_id')->unsigned()->nullable();
+            $table->integer('location_id')->unsigned()->nullable();
             $table->boolean('status')->default(1);
             $table->date('birth_date')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 
