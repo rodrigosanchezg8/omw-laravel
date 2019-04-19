@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\File;
 use App\User;
+use App\Location;
 use App\Services\CompanyService;
 
 class UserService
@@ -18,7 +19,7 @@ class UserService
         return User::with([
             'roles',
             'company',
-            'city',
+            'location'
         ])->roleFilter($role)
             ->get();
     }
@@ -26,7 +27,13 @@ class UserService
     public function store($data)
     {
         $user = User::create($data);
-        $user->city()->associate($data['city_id']);
+        $location = Location::create([
+            'lat' => $data['location']['lat'],
+            'lng' => $data['location']['lng'],
+            'origin' => 'address'
+        ]);
+        $user->location()->associate($location);
+        $user->save();
 
         $user->assignRole($data['role']['name']);
 
@@ -43,18 +50,24 @@ class UserService
     {
         return User::with([
             'roles',
-            'company',
-            'city' => function ($query) {
-                return $query->with('state');
+            'company' => function ($query) {
+                return $query->with('location');
             },
+            'location'
         ])->find($user_id);
     }
 
     public function update(User $user, $data)
     {
         $user->update($data);
-        $user->city()->dissociate();
-        $user->city()->associate($data['city']['id']);
+        $user->location()->dissociate();
+        $location = Location::create([
+            'lat' => $data['location']['lat'],
+            'lng' => $data['location']['lng'],
+            'origin' => 'address'
+        ]);
+        $user->location()->associate($location);
+        $user->save();
 
         if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
             if ($user->profilePhoto()) {

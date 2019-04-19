@@ -9,6 +9,8 @@ class DeliveryMan extends Model
 {
     public $tablename = 'delivery_men';
 
+    protected $table = 'delivery_men';
+
     protected $fillable = [
         'user_id',
         'service_range_id',

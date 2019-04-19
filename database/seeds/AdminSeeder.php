@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\Location;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -17,8 +18,7 @@ class AdminSeeder extends Seeder
             'last_name' => 'Sanchez',
             'email' => 'admin@admin.com',
             'phone' => 3315643212,
-            'password' => 123456, // 123456
-            'city_id' => 28082,
+            'password' => 123456,
             'status' => 1,
             'birth_date' => '1996-04-28',
         ]);

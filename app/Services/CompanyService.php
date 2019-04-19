@@ -2,28 +2,35 @@
 
 namespace App\Services;
 
-use App\Company;
 use App\File;
+use App\Company;
+use App\Location;
 
 class CompanyService
 {
 
     public function list()
     {
-        return Company::with('user')->get();
+        return Company::with('user')->whereHas('user', function ($query) {
+            return $query->where('status', 1);
+        })->get();
     }
 
     public function store($data)
     {
         $company = Company::create($data);
 
-        $user = $company->user;
+        $location = Location::create([
+            'lat' => $data['location']['lat'],
+            'lng' => $data['location']['lng'],
+            'origin' => 'address'
+        ]);
+        $company->location()->associate($location);
+        $company->save();
 
-        $user->roles()->detach();
-        $user->assignRole(config('constants.roles.company'));
-
-        if (isset($data['profile_photo'])) {
+        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
             File::upload_file($company, $data['profile_photo'], 'profile_photo');
+
         }
 
         return $company;
@@ -33,7 +40,7 @@ class CompanyService
     {
         return Company::with([
             'user',
-            'city',
+            'location',
         ])->find($company_id);
     }
 
@@ -41,9 +48,18 @@ class CompanyService
     {
         $company->update($data);
 
-        if (isset($data['profile_photo'])) {
+        $company->location()->dissociate();
+        $location = Location::create([
+            'lat' => $data['location']['lat'],
+            'lng' => $data['location']['lng'],
+            'origin' => 'address'
+        ]);
+        $company->location()->associate($location);
+        $company->save();
+
+        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
             if ($company->profilePhoto()) {
-                File::delete_file($company->profilePhoto()->path);
+                File::delete_file($company->profilePhoto()->path . $company->profilePhoto()->name);
             }
 
             File::upload_file($company, $data['profile_photo'], 'profile_photo');
@@ -58,7 +74,7 @@ class CompanyService
         $user->assignRole(config('constants.roles.client'));
 
         if ($company->profilePhoto()) {
-            File::delete_file($company->profilePhoto()->path);
+            File::delete_file($company->profilePhoto()->path . $company->profilePhoto()->name);
         }
 
         $company->delete();

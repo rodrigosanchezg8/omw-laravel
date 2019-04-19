@@ -10,17 +10,27 @@ class Company extends Model
         'user_id',
         'name',
         'description',
-        'city_id',
+        'location_id'
     ];
+
+    protected $appends = [
+        'profile_photo',
+    ];
+
+    public function getProfilePhotoAttribute()
+    {
+        $photo = $this->files()->where('description', 'profile_photo')->first();
+        return $photo ? "$photo->path/$photo->name" . '?date=' . date('Y_m_d_H_i_s') : null;
+    }
 
     public function user()
     {
         return $this->belongsTo('App\User');
     }
 
-    public function city()
+    public function location()
     {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo('App\Location');
     }
 
     public function profilePhoto()

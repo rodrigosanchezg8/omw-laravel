@@ -25,7 +25,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
-        'city_id',
+        'location_id',
         'status',
         'birth_date',
     ];
@@ -77,21 +77,9 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
-    public function city()
+    public function location()
     {
-        return $this->belongsTo('App\City');
-    }
-
-    public function fixedLocation()
-    {
-        return $this->locations()
-                    ->where('origin', config('constants.location_types.fixed'))
-                    ->first();
-    }
-
-    public function locations()
-    {
-        return $this->hasMany('App\Location');
+        return $this->belongsTo('App\Location');
     }
 
     public function company()
@@ -107,5 +95,10 @@ class User extends Authenticatable
     public function files()
     {
         return $this->morphMany('App\File', 'fileable');
+    }
+
+    public function deliveryManServiceOptions()
+    {
+        return $this->hasMany('App\DeliveryManServiceOptions');
     }
 }

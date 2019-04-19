@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup_company', 'AuthController@signup_company');
-    Route::get('states_municipalities', 'StatesController@get_states_municipalities');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
@@ -25,13 +24,12 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('deliveries.show');
-
     Route::get('deliveries', 'DeliveryController@index')->name('deliveries.index');
     Route::get('deliveries/{delivery}/show', 'DeliveryController@show')->name('deliveries.show');
     Route::get('deliveries/{delivery}/detail', 'DeliveryController@detail')->name('deliveries.detail');
 
     Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges');
+    Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('deliveries.show');
 
     Route::post('delivery_products', 'DeliveryProductController@store')->name('delivery_products.store');
 });
@@ -39,9 +37,15 @@ Route::group(['middleware' => ['auth:api']], function () {
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('users', 'UserController@index')->name('users.index');
     Route::post('users', 'UserController@store')->name('users.store');
-    Route::get('users/{user}', 'UserController@show')->name('users.show');
     Route::put('users/{user}', 'UserController@update')->name('users.update');
     Route::delete('users/{user}', 'UserController@delete')->name('users.delete');
+
+    Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+});
+
+Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
+
+    Route::get('users/{user}', 'UserController@show')->name('users.show');
 
     Route::get('companies', 'CompanyController@index')->name('companies.index');
     Route::post('companies', 'CompanyController@store')->name('companies.store');
