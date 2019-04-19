@@ -25,7 +25,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
-        'city_id',
+        'location_id',
         'status',
         'birth_date',
     ];
@@ -77,14 +77,9 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
-    public function city()
+    public function location()
     {
-        return $this->belongsTo('App\City');
-    }
-
-    public function locations()
-    {
-        return $this->hasMany('App\Location');
+        return $this->belongsTo('App\Location');
     }
 
     public function company()

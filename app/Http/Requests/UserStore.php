@@ -30,8 +30,9 @@ class UserStore extends FormRequest
             'phone' => 'required|digits:10',
             'password' => 'required|confirmed',
             'role.name' => 'required|string',
-            'city_id' => 'numeric',
             'birth_date' => 'date:Y-m-d',
+            'location.lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
+            'location.lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
         ];
     }
 
@@ -48,8 +49,11 @@ class UserStore extends FormRequest
             'role.name.required' => 'Debe proporcionar un rol para el usuario',
             'phone.required' => 'El telefono del usuario es requerido',
             'phone.digits' => 'El telefono debe contener unicamente 10 digitos',
-            'city_id.digits' => 'La ciudad ingresada tiene que ser un numero entero',
             'birth_date.date_format' => 'La fecha ingresada no es valida',
+            'location.lat.required' => 'La latitud de origen es requerida',
+            'location.lat.regex' => 'La latitud de origen no tiene un formato valido',
+            'location.lng.required' => 'La longitud de origen es requerida',
+            'location.lng.regex' => 'La longitud de origen no tiene un formato valido',
         ];
     }
 }
