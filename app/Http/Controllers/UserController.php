@@ -72,6 +72,27 @@ class UserController extends Controller
         }
     }
 
+    public function showClientByEmail(request $request)
+    {
+        try {
+
+            $user = $this->service->getDetailedClientByEmail($request['email']);
+
+            return response()->json([
+                'status' => 'success',
+                'client' => $user
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
     public function update(User $user, UserUpdate $request)
     {
         try {

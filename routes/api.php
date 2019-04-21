@@ -60,6 +60,8 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
 });
 
 Route::group(['middleware' => ['auth:api', 'role:client']], function () {
+    Route::get('users/clients/by_email', 'UserController@showClientByEmail');
+
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
     Route::put('deliveries/{delivery}/update', 'DeliveryController@update')->name('deliveries.update');
 
@@ -71,6 +73,6 @@ Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
     Route::post('delivery_men', 'DeliveryManController@store')->name('delivery_men.store');
 
     Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
-    
+
     Route::post('delivery_location_tracks', 'DeliveryLocationTrackController@store')->name('delivery_location_tracks.store');
 });
