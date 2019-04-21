@@ -21,11 +21,6 @@ return [
         'long' => 250
     ],
 
-    'location_types' => [
-        'fixed' => 1,
-        'variable' => 0,
-    ],
-
     'delivery_man_statuses' => [
         'available' => 1,
         'bussy' => 0,

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SignUpDeliveryMan;
 use App\DeliveryMan;
-use App\Http\Requests\DeliveryManGet;
 use App\ServiceRange;
 use App\Services\DeliveryManService;
+use App\Http\Requests\SignUpDeliveryMan;
+use App\Http\Requests\DeliveryManGet;
 use Illuminate\Http\Request;
 
 class DeliveryManController extends Controller

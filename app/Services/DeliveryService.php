@@ -55,6 +55,11 @@ class DeliveryService
         return Delivery::create($data);
     }
 
+    public function update(Delivery $delivery, $data)
+    {
+        $delivery->update($data);
+    }
+
     public function getDetailedDelivery($delivery_id)
     {
         return Delivery::with([
@@ -105,5 +110,19 @@ class DeliveryService
 
         $deliveryMan->available = config('constants.delivery_man_statuses.bussy');
         $deliveryMan->save();
+    }
+
+    public function changeStatus(Delivery $delivery, $data)
+    {
+        if (DeliveryStatus::find($data['delivery_status_id'])->status == config('constants.delivery_statuses.cancelled')) {
+            
+            throw new \Exception("No es posible cancelar el envio", 1);
+
+        } else {
+
+            $delivery->delivery_status_id = $data['delivery_status_id'];
+            $delivery->save();
+
+        }
     }
 }

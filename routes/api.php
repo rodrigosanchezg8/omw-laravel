@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges');
     Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('deliveries.show');
 
-    Route::post('delivery_products', 'DeliveryProductController@store')->name('delivery_products.store');
+    Route::post('locations', 'LocationController@store')->name('locations.store');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
@@ -44,7 +44,6 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
-
     Route::get('users/{user}', 'UserController@show')->name('users.show');
 
     Route::get('companies', 'CompanyController@index')->name('companies.index');
@@ -63,4 +62,14 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
 
 Route::group(['middleware' => ['auth:api', 'role:client']], function () {
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
+    Route::put('deliveries/{delivery}/update', 'DeliveryController@update')->name('deliveries.update');
+
+    Route::post('delivery_products', 'DeliveryProductController@store')->name('delivery_products.store');
+    Route::put('delivery_products/{delivery_product}/update', 'DeliveryProductController@update')->name('delivery_products.update');
+});
+
+Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
+    Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
+    
+    Route::post('delivery_location_tracks', 'DeliveryLocationTrackController@store')->name('delivery_location_tracks.store');
 });
