@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DeliveryMan;
+use App\Http\Requests\DeliveryManUpdate;
 use App\ServiceRange;
 use App\Services\DeliveryManService;
 use App\Http\Requests\SignUpDeliveryMan;
@@ -37,7 +38,7 @@ class DeliveryManController extends Controller
         }
     }
 
-    public function store(SignUpDeliveryMan $request)
+    public function store(DeliveryManUpdate $request)
     {
         $deliveryMan = $this->service->store($request->all());
 
@@ -55,7 +56,7 @@ class DeliveryManController extends Controller
             $deliveryMan = $this->service->getDetailedDeliveryMan($delivery_man_id);
 
             if ($deliveryMan == null) {
-                throw new \Exception("no se encontró ningun repartidor disponible", 1);
+                throw new \Exception("No se encontró ningun repartidor", 1);
             }
 
             return response()->json([
@@ -63,7 +64,7 @@ class DeliveryManController extends Controller
                 'delivery_man' => $deliveryMan,
             ]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'status' => 'failed',
