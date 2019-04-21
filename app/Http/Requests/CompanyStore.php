@@ -18,6 +18,8 @@ class CompanyStore extends FormRequest
             'user_id' => 'required|numeric',
             'name' => 'required',
             'description' => 'required',
+            'location.lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
+            'location.lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
         ];
     }
 
@@ -28,6 +30,10 @@ class CompanyStore extends FormRequest
             'user_id.numeric' => 'El usuario que intenta asignar a esta empresa no es valido',
             'name.required' => 'El nombre de la empresa es requerido',
             'description.required' => 'La descripcion de la empresa es requerida',
+            'location.lat.required' => 'La latitud de origen es requerida',
+            'location.lat.regex' => 'La latitud de origen no tiene un formato valido',
+            'location.lng.required' => 'La longitud de origen es requerida',
+            'location.lng.regex' => 'La longitud de origen no tiene un formato valido',
         ];
     }
 }
