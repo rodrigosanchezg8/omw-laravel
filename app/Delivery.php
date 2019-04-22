@@ -14,8 +14,6 @@ class Delivery extends Model
         'planned_end_date',
         'departure_date',
         'arrival_date',
-        'departure_location_id',
-        'arrival_location_id',
         'delivery_status_id',
     ];
 
@@ -32,16 +30,6 @@ class Delivery extends Model
     public function receiver()
     {
         return $this->belongsTo('App\User');
-    }
-
-    public function departureLocation()
-    {
-        return $this->belongsTo('App\Location');
-    }
-
-    public function arrivalLocation()
-    {
-        return $this->belongsTo('App\Location');
     }
 
     public function deliveryStatus()

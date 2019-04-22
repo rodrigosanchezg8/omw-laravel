@@ -16,8 +16,6 @@ class DeliveryService
             $list = Delivery::with([
                 'sender',
                 'receiver',
-                'departureLocation',
-                'arrivalLocation',
                 'deliveryStatus',
                 'products',
             ])->whereIn('delivery_status_id', explode('|', $request['statuses']));
@@ -27,8 +25,6 @@ class DeliveryService
             $list = Delivery::with([
                 'sender',
                 'receiver',
-                'departureLocation',
-                'arrivalLocation',
                 'deliveryStatus',
                 'products',
             ]);
@@ -66,8 +62,6 @@ class DeliveryService
             'deliveryMan',
             'sender',
             'receiver',
-            'departureLocation',
-            'arrivalLocation',
             'deliveryStatus',
         ])->find($delivery_id);
     }
@@ -115,7 +109,7 @@ class DeliveryService
     public function changeStatus(Delivery $delivery, $data)
     {
         if (DeliveryStatus::find($data['delivery_status_id'])->status == config('constants.delivery_statuses.cancelled')) {
-            
+
             throw new \Exception("No es posible cancelar el envio", 1);
 
         } else {

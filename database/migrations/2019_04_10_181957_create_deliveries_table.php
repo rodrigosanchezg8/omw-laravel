@@ -22,15 +22,11 @@ class CreateDeliveriesTable extends Migration
             $table->date('planned_end_date');
             $table->date('departure_date')->nullable();
             $table->date('arrival_date')->nullable();
-            $table->integer('departure_location_id')->unsigned();
-            $table->integer('arrival_location_id')->unsigned();
             $table->integer('delivery_status_id')->unsigned()->default(1);
 
             $table->foreign('delivery_man_id')->references('id')->on('users');
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('receiver_id')->references('id')->on('users');
-            $table->foreign('departure_location_id')->references('id')->on('locations');
-            $table->foreign('arrival_location_id')->references('id')->on('locations');
             $table->foreign('delivery_status_id')->references('id')->on('delivery_statuses');
 
             $table->timestamps();
