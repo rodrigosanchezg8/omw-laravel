@@ -53,7 +53,14 @@ class DeliveryService
 
     public function update(Delivery $delivery, $data)
     {
-        $delivery->update($data);
+        if ($delivery->deliveryStatus->status != config('constants.delivery_statuses.not_started')) {
+
+            $delivery->update($data);
+
+        } else {
+            throw new \Exception("El status de la entrega no permite que se actualicen datos", 1);
+
+        }
     }
 
     public function getDetailedDelivery($delivery_id)

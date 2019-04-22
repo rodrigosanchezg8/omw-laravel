@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('deliveries/{delivery}/detail', 'DeliveryController@detail')->name('deliveries.detail');
 
     Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges');
-    Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('deliveries.show');
+    Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('delivery_men.show');
 
     Route::post('locations', 'LocationController@store')->name('locations.store');
 });
@@ -70,6 +70,6 @@ Route::group(['middleware' => ['auth:api', 'role:client']], function () {
 
 Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
     Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
-    
+
     Route::post('delivery_location_tracks', 'DeliveryLocationTrackController@store')->name('delivery_location_tracks.store');
 });
