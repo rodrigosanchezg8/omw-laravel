@@ -118,10 +118,9 @@ class DeliveryManService {
     private function getCloserDeliveryMan($deliveryMen, $routeCoords)
     {
         foreach ($deliveryMen as $guy) {
-
             try {
-                $minDistanceFromOrigin  = config('constants.min_delivery_man_distance_from_origin');
-                $guyFixedLocation = $guy->user->fixedLocation();
+                $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
+                $guyFixedLocation = $guy->user->location;
 
                 $distanceFromGuyToInitialPoint = $this->getDistanceBeginingtoEnd([
                     'origin_lat' => $guyFixedLocation->lat,

@@ -21,8 +21,6 @@ class DeliveryUpdate extends FormRequest
             'planned_end_date' => 'date:Y-m-d',
             'departure_date' => 'date:Y-m-d',
             'arrival_date' => 'date:Y-m-d',
-            'departure_location_id' => 'digits:1',
-            'arrival_location_id' => 'digits:1',
             'delivery_status_id' => 'digits:1',
         ];
     }
@@ -37,8 +35,6 @@ class DeliveryUpdate extends FormRequest
             'planned_end_date.date' => 'La fecha planeada de llegada no es valida',
             'departure_date.date' => 'La fecha real de salida no es valida',
             'arrival_date.date' => 'La fecha real de llegada no es valida',
-            'departure_location_id.digits' => 'La localizacion de salida no es valida',
-            'arrival_location_id.digits' => 'La localizacion de llegada no es valida',
         ];
     }
 }

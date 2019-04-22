@@ -53,7 +53,7 @@ class DeliveryService
 
     public function update(Delivery $delivery, $data)
     {
-        if ($delivery->deliveryStatus->status != config('constants.delivery_statuses.not_started')) {
+        if ($delivery->deliveryStatus->status == config('constants.delivery_statuses.not_started')) {
 
             $delivery->update($data);
 

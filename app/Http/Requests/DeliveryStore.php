@@ -21,8 +21,6 @@ class DeliveryStore extends FormRequest
             'planned_end_date' => 'required|date:Y-m-d',
             'departure_date' => 'date:Y-m-d',
             'arrival_date' => 'date:Y-m-d',
-            'departure_location_id' => 'required|digits:1',
-            'arrival_location_id' => 'required|digits:1',
             'delivery_status_id' => 'digits:1',
         ];
     }
@@ -41,10 +39,6 @@ class DeliveryStore extends FormRequest
             'planned_end_date.date' => 'La fecha planeada de llegada no es valida',
             'departure_date.date' => 'La fecha real de salida no es valida',
             'arrival_date.date' => 'La fecha real de llegada no es valida',
-            'departure_location_id.required' => 'la localizacion de salida es obligatoria',
-            'departure_location_id.digits' => 'La localizacion de salida no es valida',
-            'arrival_location_id.required' => 'La localizacion de llegada es requerida',
-            'arrival_location_id.digits' => 'La localizacion de llegada no es valida',
         ];
     }
 }
