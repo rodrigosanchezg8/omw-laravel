@@ -75,8 +75,7 @@ class DeliveryService
 
     public function detail(Delivery $delivery)
     {
-        return Auth::user()->hasRole('delivery_man') ? []
-                                                     : $delivery->products;
+        return Auth::user()->hasRole('delivery_man') ? [] : $delivery->products;
     }
 
     public function cancel(Delivery $delivery)

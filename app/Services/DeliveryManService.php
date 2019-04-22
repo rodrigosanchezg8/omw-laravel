@@ -8,7 +8,8 @@ use App\ServiceRange;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
-class DeliveryManService {
+class DeliveryManService
+{
 
     public function __construct(Client $guzzleClient)
     {
@@ -25,6 +26,7 @@ class DeliveryManService {
 
     public function store($data)
     {
+        DeliveryMan::whereUserId($data['user_id'])->delete();
         return DeliveryMan::create($data);
     }
 
@@ -33,7 +35,7 @@ class DeliveryManService {
         return DeliveryMan::with([
             'user',
             'service_range',
-        ])->find($delivery_man_id);
+        ])->whereUserId($delivery_man_id)->first();
     }
 
     public function getAvailableDeliveryMan($coords)
@@ -53,7 +55,7 @@ class DeliveryManService {
             return $deliveryMan;
 
         } else {
-            throw new \Exception("No ningún repartidor que trabaje con la distancia proporcionada de: ". $distance, 1);
+            throw new \Exception("No ningún repartidor que trabaje con la distancia proporcionada de: " . $distance, 1);
         }
     }
 
@@ -136,9 +138,9 @@ class DeliveryManService {
                     'destiny_lng' => $routeCoords['destiny_lng'],
                 ]);
 
-                if ($distanceFromGuyToEndPoint <= $guy->service_range->km  && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
+                if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
 
-                        return $guy;
+                    return $guy;
                 }
 
             } catch (\Exception $e) {

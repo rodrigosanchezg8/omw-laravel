@@ -57,6 +57,23 @@ class UserService
         ])->find($user_id);
     }
 
+    public function getDetailedClientByEmail($email)
+    {
+        $user = User::whereEmail($email)->with([
+            'roles',
+            'company' => function ($query) {
+                return $query->with('location');
+            },
+            'location'
+        ])->first();
+
+
+        if (!$user)
+            throw new \Exception("No hay ningún cliente con éste correo", 1);
+
+        return $user;
+    }
+
     public function update(User $user, $data)
     {
         $user->update($data);
