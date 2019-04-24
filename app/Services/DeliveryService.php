@@ -11,36 +11,43 @@ class DeliveryService
 {
     public function list($request)
     {
-        if (isset($request['statuses'])) {
+        $allowedRelationships = [
+            'sender',
+            'receiver',
+            'deliveryStatus',
+        ];
 
-            $list = Delivery::with([
-                'sender',
-                'receiver',
-                'deliveryStatus',
-                'products',
-            ])->whereIn('delivery_status_id', explode('|', $request['statuses']));
+        $allowedStatuses = [
+            DeliveryStatus::where('status', config('constants.delivery_statuses.not_started'))->first()->id,
+            DeliveryStatus::where('status', config('constants.delivery_statuses.in_progress'))->first()->id,
+            DeliveryStatus::where('status', config('constants.delivery_statuses.finished'))->first()->id,
+        ];
+
+        if (Auth::user()->hasRole('delivery_man')) {
+            $list = Delivery::with($allowedRelationships)
+                               ->where('delivery_man_id', Auth::user()->deliveryMan->id);
 
         } else {
 
-            $list = Delivery::with([
-                'sender',
-                'receiver',
-                'deliveryStatus',
-                'products',
-            ]);
+            $allowedRelationships[] = 'products';
+            $allowedStatuses[] = DeliveryStatus::where(
+                                                        'status',
+                                                        config('constants.delivery_statuses.in_progress')
+                                               )->first()->id;
+
+            $list = Delivery::with($allowedRelationships);
+
+            if (Auth::user()->hasRole('client')) {
+                $list->where('sender_id', Auth::user()->id)
+                     ->orWhere('receiver_id', Auth::user()->id);
+            }
 
         }
 
+        $list->whereIn('delivery_status_id', $allowedStatuses);
 
-        if (Auth::user()->hasRole('client|company|delivery_man')) {
-            if (Auth::user()->hasRole('delivery_man')) {
-                $list->where('delivery_man_id', Auth::user()->id);
-            } else {
-                $list->where(function ($inner_query) {
-                    $inner_query->where('sender_id', Auth::user()->id)
-                                ->orWhere('receiver_id', Auth::user()->id);
-                });
-            }
+        if (isset($request['statuses'])) {
+            $list->whereIn('delivery_status_id', explode('|', $request['statuses']));
         }
 
         return $list->get();
@@ -65,17 +72,18 @@ class DeliveryService
 
     public function getDetailedDelivery($delivery_id)
     {
-        return Delivery::with([
+        $allowedRelationships = [
             'deliveryMan',
             'sender',
             'receiver',
             'deliveryStatus',
-        ])->find($delivery_id);
-    }
+        ];
 
-    public function detail(Delivery $delivery)
-    {
-        return Auth::user()->hasRole('delivery_man') ? [] : $delivery->products;
+        if (!Auth::user()->hasRole('delivery_man')){
+            $allowedRelationships[] = 'products';
+        }
+
+        return Delivery::with($allowedRelationships)->find($delivery_id);
     }
 
     public function cancel(Delivery $delivery)

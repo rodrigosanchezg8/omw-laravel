@@ -59,26 +59,6 @@ class DeliveryController extends Controller
         }
     }
 
-    public function detail(Delivery $delivery, Request $request)
-    {
-        try {
-
-            $detail = $this->service->detail($delivery);
-
-            return response()->json([
-                'detail' => $detail,
-            ]);
-
-        } catch(\Exception $e) {
-
-            return response()->json([
-                'status' => 'failed',
-                'message' => $e->getMessage(),
-            ]);
-
-        }
-    }
-
     public function store(DeliveryStore $request)
     {
         try {
