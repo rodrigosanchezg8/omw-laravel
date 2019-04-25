@@ -14,6 +14,48 @@ class DeliveryProductController extends Controller
         $this->service = $service;
     }
 
+    public function index()
+    {
+
+    }
+
+    public function byDelivery($deliveryId)
+    {
+        try {
+
+            $list = $this->service->getDeliveryProductByDelivery($deliveryId);
+
+            return response()->json($list);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function show($deliveryProductId)
+    {
+        try {
+
+            $list = $this->service->getDetailedDeliveryProduct($deliveryProductId);
+
+            return response()->json($list);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+
     public function store(DeliveryProductStore $request)
     {
         try {
@@ -21,6 +63,7 @@ class DeliveryProductController extends Controller
             $deliveryProduct = $this->service->create($request->all());
 
             return response()->json([
+                'header' => 'Producto agregado',
                 'status' => 'success',
                 'delivery' => $deliveryProduct,
             ]);
@@ -44,6 +87,24 @@ class DeliveryProductController extends Controller
             return response()->json([
                 'status' => 'success',
             ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function delete(DeliveryProduct $deliveryProduct)
+    {
+        try {
+
+            $this->service->delete($deliveryProduct);
+
+            return response()->json(['status' => 'success']);
 
         } catch (\Exception $e) {
 

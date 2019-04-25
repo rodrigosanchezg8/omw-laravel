@@ -64,8 +64,9 @@ Route::group(['middleware' => ['auth:api', 'role:client']], function () {
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
     Route::put('deliveries/{delivery}/update', 'DeliveryController@update')->name('deliveries.update');
 
-    Route::post('delivery_products', 'DeliveryProductController@store')->name('delivery_products.store');
-    Route::put('delivery_products/{delivery_product}/update', 'DeliveryProductController@update')->name('delivery_products.update');
+    Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
+    Route::resource('delivery_products', 'DeliveryProductController');
+
 });
 
 Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {

@@ -13,6 +13,7 @@ class DeliveryStatusesTableSeeder extends Seeder
     public function run()
     {
         $statuses = [
+            'Creando',
             'No Iniciado',
             'En Progreso',
             'Entregado',
