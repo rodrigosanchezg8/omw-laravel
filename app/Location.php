@@ -9,6 +9,5 @@ class Location extends Model
     protected $fillable = [
         'lat',
         'lng',
-        'origin'
     ];
 }

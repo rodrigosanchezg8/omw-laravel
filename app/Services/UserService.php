@@ -30,7 +30,6 @@ class UserService
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
         $user->location()->associate($location);
         $user->save();
@@ -81,7 +80,6 @@ class UserService
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
         $user->location()->associate($location);
         $user->save();
