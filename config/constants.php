@@ -9,6 +9,8 @@ return [
     ],
 
     'delivery_statuses' => [
+        'making' => 'Creando',
+        'not_assigned' => 'No asignado',
         'not_started' => 'No Iniciado',
         'in_progress' => 'En Progreso',
         'finished' => 'Entregado',
