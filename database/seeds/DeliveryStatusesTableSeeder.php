@@ -14,6 +14,7 @@ class DeliveryStatusesTableSeeder extends Seeder
     {
         $statuses = [
             'Creando',
+            'No asignado',
             'No Iniciado',
             'En Progreso',
             'Entregado',

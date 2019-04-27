@@ -14,6 +14,7 @@ class CreateDeliveryProductsTable extends Migration
     public function up()
     {
         Schema::create('delivery_products', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('delivery_id')->unsigned();
             $table->string('name');
             $table->text('description')->nullable();
