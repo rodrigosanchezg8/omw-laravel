@@ -173,7 +173,7 @@ class DeliveryController extends Controller
             $this->service->changeStatus($delivery, $request->all());
 
             return response()->json([
-                'header' => 'Status Cambiado',
+                'header' => 'Su entrega ha sido enviada',
                 'status' => 'success'
             ]);
 

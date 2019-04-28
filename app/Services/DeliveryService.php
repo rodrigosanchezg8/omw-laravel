@@ -19,6 +19,7 @@ class DeliveryService
 
         $allowedStatuses = [
             DeliveryStatus::where('status', config('constants.delivery_statuses.making'))->first()->id,
+            DeliveryStatus::where('status', config('constants.delivery_statuses.not_assigned'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.not_started'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.in_progress'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.finished'))->first()->id,
@@ -179,9 +180,20 @@ class DeliveryService
 
         } else {
 
-            $delivery->delivery_status_id = $data['delivery_status_id'];
+            $delivery->delivery_status_id = $deliveryStatus->id;
             $delivery->save();
 
         }
+    }
+
+    public function setNotStartedDelivery(Delivery $delivery, $notStartedDeliveryInfo)
+    {
+        $delivery->planned_start_date = now()->toDateStringFormat();
+        $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['time']);
+        $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man_id'];
+
+        $delivery->save();
+
+        return $delivery;
     }
 }

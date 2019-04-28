@@ -38,7 +38,7 @@ class DeliveryManService
         ])->whereUserId($delivery_man_id)->first();
     }
 
-    public function getAvailableDeliveryMan(Delivery $delivery)
+    public function closestDeliveryManWithTime(Delivery $delivery)
     {
         $coords = [];
         $coords['origin_lat'] = $delivery->senderLat;
@@ -46,7 +46,7 @@ class DeliveryManService
         $coords['destiny_lat'] = $delivery->receiverLat;
         $coords['destiny_lng'] = $delivery->receiverLng;
 
-        $distance = $this->getDistanceBeginingtoEnd($coords);
+        $distance = $this->distanceAndTimeBeginingToEnd($coords)['distance'];
 
         $serviceRanges = $this->getServiceRanges($distance);
         $validStatuses = $this->getValidStatuses();
@@ -63,10 +63,10 @@ class DeliveryManService
                   });
             })
             ->where('available', 1)->get();
-            
-            $deliveryMan = $this->getCloserDeliveryMan($deliveryMen, $coords);
 
-            return $deliveryMan;
+            $closestInfo = $this->closestDeliveryManAndTime($deliveryMen, $coords);
+
+            return $closestInfo;
 
         } else {
             throw new \Exception("No ningún repartidor que trabaje con la distancia proporcionada de: " . $distance, 1);
@@ -122,7 +122,7 @@ class DeliveryManService
         ])->pluck('id')->toArray();
     }
 
-    private function getDistanceBeginingtoEnd($coords)
+    private function distanceAndTimeBeginingToEnd($coords)
     {
         $apiKey = config('apis.mapquest.customer_key');
 
@@ -156,37 +156,47 @@ class DeliveryManService
             throw new \Exception("No hay una ruta entre los dos puntos proporcionados", 1);
         }
 
-        return $jsonResponse->distance[1];
+        return [
+            'distance' => $jsonResponse->distance[1],
+            'time' => $jsonResponse->time[1],
+        ];
     }
 
-    private function getCloserDeliveryMan($deliveryMen, $routeCoords)
+    private function closestDeliveryManAndTime($deliveryMen, $routeCoords)
     {
-        $closerGuy = null;
-        $closerDistance = null;
+        $closestGuy = null;
+        $closestDistance = null;
+        $totalTime = 0;
         foreach ($deliveryMen as $guy) {
             try {
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
                 $guyFixedLocation = $guy->user->location;
 
-                $distanceFromGuyToInitialPoint = $this->getDistanceBeginingtoEnd([
+                $fromGuyToInitialPointInfo = $this->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['origin_lat'],
                     'destiny_lng' => $routeCoords['origin_lng'],
                 ]);
 
-                $distanceFromGuyToEndPoint = $this->getDistanceBeginingtoEnd([
+                $distanceFromGuyToInitialPoint = $fromGuyToInitialPointInfo['distance'];
+                $timeFromGuyToInitialPoint = $fromGuyToInitialPointInfo['time'];
+
+                $fromGuyToEndPoint = $this->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['destiny_lat'],
                     'destiny_lng' => $routeCoords['destiny_lng'],
                 ]);
 
-                if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
-                    if ($closerGuy == null || ($distanceFromGuyToInitialPoint < $closerDistance)) {
-                        $closerDistance = $distanceFromGuyToInitialPoint;
-                        $closerGuy = $guy;
+                $distanceFromGuyToEndPoint = $fromGuyToEndPoint['distance'];
+                $timeFromGuyToEndPoint = $fromGuyToEndPoint['distance'];
 
+                if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
+                    if ($closestGuy == null || ($distanceFromGuyToInitialPoint < $closestDistance)) {
+                        $closestDistance = $distanceFromGuyToInitialPoint;
+                        $totalTime = $distanceFromGuyToInitialPoint + $timeFromGuyToEndPoint;
+                        $closestGuy = $guy;
                     }
                 }
 
@@ -196,11 +206,14 @@ class DeliveryManService
 
         }
 
-        if (!$closerGuy) {
+        if (!$closestGuy) {
             throw new \Exception("No hay un repartidor disponible para la ruta seleccionada", 1);
         }
 
-        return $closerGuy;
+        return [
+            'delivery_man' => $closestGuy,
+            'total_time' => $totalTime,
+        ];
 
     }
 }
