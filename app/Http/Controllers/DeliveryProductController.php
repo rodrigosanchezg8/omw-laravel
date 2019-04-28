@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DeliveryProduct;
 use App\Http\Requests\DeliveryProductStore;
+use App\Http\Requests\DeliveryProductUpdate;
 use App\Services\DeliveryProductService;
 use Illuminate\Http\Request;
 
@@ -85,6 +86,7 @@ class DeliveryProductController extends Controller
             $this->service->update($deliveryProduct, $request->all());
 
             return response()->json([
+                'header' => 'Producto actualizado',
                 'status' => 'success',
             ]);
 
@@ -104,7 +106,10 @@ class DeliveryProductController extends Controller
 
             $this->service->delete($deliveryProduct);
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'header' => 'Producto Eliminado',
+                'status' => 'success'
+            ]);
 
         } catch (\Exception $e) {
 

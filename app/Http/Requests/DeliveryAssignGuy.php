@@ -14,7 +14,7 @@ class DeliveryAssignGuy extends FormRequest
     public function rules()
     {
         return [
-            'delivery_man_id' => 'required|digits:1',
+            'delivery_man_id' => 'required|numeric',
         ];
     }
 
@@ -22,7 +22,7 @@ class DeliveryAssignGuy extends FormRequest
     {
         return [
             'delivery_man_id.required' => 'El repartidor es un campo requerido',
-            'delivery_man_id.digits' => 'El repartidor proporcionado no es valido',
+            'delivery_man_id.numeric' => 'El repartidor proporcionado no es valido',
         ];
     }
 }

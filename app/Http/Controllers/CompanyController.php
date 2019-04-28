@@ -102,7 +102,10 @@ class CompanyController extends Controller
 
             $this->service->delete($company);
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'header' => 'Compania borrada',
+                'status' => 'success'
+            ]);
 
         } catch (\Exception $e) {
 

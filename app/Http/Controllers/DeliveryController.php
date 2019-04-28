@@ -45,6 +45,7 @@ class DeliveryController extends Controller
             $delivery = $this->service->getDetailedDelivery($delivery_id);
 
             return response()->json([
+                'header' => 'Entrega encontrada',
                 'status' => 'success',
                 'delivery' => $delivery,
             ]);
@@ -66,6 +67,7 @@ class DeliveryController extends Controller
             $delivery = $this->service->create($request->all());
 
             return response()->json([
+                'header' => 'Entrega guardada',
                 'status' => 'success',
                 'delivery' => $delivery,
             ]);
@@ -87,6 +89,28 @@ class DeliveryController extends Controller
             $this->service->update($delivery, $request->all());
 
             return response()->json([
+                'header' => 'Entrega Actualizada',
+                'status' => 'success',
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function destroy(Delivery $delivery)
+    {
+        try {
+
+            $this->service->destroy($delivery);
+
+            return response()->json([
+                'header' => 'Entrega Eliminada',
                 'status' => 'success',
             ]);
 
@@ -107,6 +131,7 @@ class DeliveryController extends Controller
             $this->service->cancel($delivery);
 
             return response()->json([
+                'header' => 'Entrega Cancelada',
                 'status' => 'success'
             ]);
 
@@ -127,6 +152,7 @@ class DeliveryController extends Controller
             $this->service->assignDeliveryMan($delivery, $request->all());
 
             return response()->json([
+                'header' => 'Repartidor Asignado',
                 'status' => 'success'
             ]);
 
@@ -147,6 +173,7 @@ class DeliveryController extends Controller
             $this->service->changeStatus($delivery, $request->all());
 
             return response()->json([
+                'header' => 'Status Cambiado',
                 'status' => 'success'
             ]);
 

@@ -20,6 +20,7 @@ class DeliveryLocationTrackController extends Controller
             $deliveryLocationTrack = $this->service->store($request->all());
 
             return response()->json([
+                'header' => 'Track Actualizado',
                 'status' => 'success',
                 'delivery_location_track' => $deliveryLocationTrack,
             ]);

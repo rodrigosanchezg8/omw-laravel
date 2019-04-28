@@ -14,8 +14,8 @@ class DeliveryLocationTrackStore extends FormRequest
     public function rules()
     {
         return [
-            'delivery_id' => 'required|digits:1',
-            'location_id' => 'required|digits:1',
+            'delivery_id' => 'required|numeric',
+            'location_id' => 'required|numeric',
             'step' => 'required|integer|min:0',
         ];
 
@@ -24,9 +24,9 @@ class DeliveryLocationTrackStore extends FormRequest
     {
         return [
             'delivery_id.required' => 'Es necesario proporcionar un pedido para la localizacion',
-            'delivery_id.digits' => 'El pedido ingresado no esta en un formato valido',
+            'delivery_id.numeric' => 'El pedido ingresado no esta en un formato valido',
             'location_id.required' => 'Es necesario proporcionar una localizacion',
-            'location_id.digits' => 'La localizacion ingresada no esta en un formato valido',
+            'location_id.numeric' => 'La localizacion ingresada no esta en un formato valido',
             'step.required' => 'Es necesario especificar el step de la localizacion',
             'step.integer' => 'El step no se encuentra en un formato valido',
             'step.min' => 'El step minimo es cero',

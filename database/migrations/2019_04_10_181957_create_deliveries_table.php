@@ -18,6 +18,7 @@ class CreateDeliveriesTable extends Migration
             $table->integer('delivery_man_id')->nullable()->unsigned();
             $table->integer('sender_id')->unsigned();
             $table->integer('receiver_id')->unsigned();
+            $table->boolean('company_is_sending')->default(0);
             $table->date('planned_start_date')->nullable();
             $table->date('planned_end_date')->nullable();
             $table->date('departure_date')->nullable();

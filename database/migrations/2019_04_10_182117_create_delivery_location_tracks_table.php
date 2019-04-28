@@ -14,6 +14,7 @@ class CreateDeliveryLocationTracksTable extends Migration
     public function up()
     {
         Schema::create('delivery_location_tracks', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('delivery_id')->unsigned();
             $table->integer('location_id')->unsigned();
             $table->integer('step');

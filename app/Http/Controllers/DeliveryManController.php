@@ -60,6 +60,7 @@ class DeliveryManController extends Controller
             }
 
             return response()->json([
+                'header' => 'Repartidor Encontrado',
                 'status' => 'success',
                 'delivery_man' => $deliveryMan,
             ]);
@@ -74,13 +75,14 @@ class DeliveryManController extends Controller
         }
     }
 
-    public function get_available_delivery_man(DeliveryManGet $request)
+    public function get_available_delivery_man(Delivery $delivery)
     {
         try {
 
-            $closeDeliveryMan = $this->service->getAvailableDeliveryMan($request->all());
+            $closeDeliveryMan = $this->service->getAvailableDeliveryMan($delivery);
 
             return response()->json([
+                'header' => 'Repartidor Encontrado',
                 'status' => 'success',
                 'delivery_man' => $closeDeliveryMan,
             ]);

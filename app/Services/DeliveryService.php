@@ -18,6 +18,7 @@ class DeliveryService
         ];
 
         $allowedStatuses = [
+            DeliveryStatus::where('status', config('constants.delivery_statuses.making'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.not_started'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.in_progress'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.finished'))->first()->id,
@@ -38,16 +39,36 @@ class DeliveryService
             $list = Delivery::with($allowedRelationships);
 
             if (Auth::user()->hasRole('client')) {
-                $list->where('sender_id', Auth::user()->id)
-                     ->orWhere('receiver_id', Auth::user()->id);
+
+                if(isset($request['origin'])) {
+
+                    switch ($request['origin']) {
+                        case config('constants.origin_types.sender'):
+                            $list->where('sender_id', Auth::user()->id);
+                            break;
+                        case config('constants.origin_types.receiver'):
+                            $list->where('receiver_id', Auth::user()->id);
+                            break;
+                        default:
+                            $list->where('sender_id', Auth::user()->id)
+                                 ->orWhere('receiver_id', Auth::user()->id);
+                    }
+
+                } else {
+                    $list->where('sender_id', Auth::user()->id)
+                         ->orWhere('receiver_id', Auth::user()->id);
+                }
             }
 
         }
 
         $list->whereIn('delivery_status_id', $allowedStatuses);
 
-        if (isset($request['statuses'])) {
-            $list->whereIn('delivery_status_id', explode('|', $request['statuses']));
+        if (isset($request['status'])) {
+
+            $requestedStatus = DeliveryStatus::where('status', $request['status'])->first()->id;
+
+            $list->where('delivery_status_id', $requestedStatus);
         }
 
         return $list->get();
@@ -60,7 +81,7 @@ class DeliveryService
 
     public function update(Delivery $delivery, $data)
     {
-        if ($delivery->deliveryStatus->status == config('constants.delivery_statuses.not_started')) {
+        if ($this->deliveryCanBeAltered($delivery)) {
 
             $delivery->update($data);
 
@@ -68,6 +89,16 @@ class DeliveryService
             throw new \Exception("El status de la entrega no permite que se actualicen datos", 1);
 
         }
+    }
+
+    public function destroy(Delivery $delivery)
+    {
+        if (Auth::user()->hasRole('client') && !$this->deliveryCanBeAltered($delivery)) {
+            throw new \Exception("El status de la entrega no permite que se elimine", 1);
+        }
+
+        $delivery->locationTracks()->delete();
+        $delivery->products();
     }
 
     public function getDetailedDelivery($delivery_id)
@@ -132,5 +163,14 @@ class DeliveryService
             $delivery->save();
 
         }
+    }
+
+    private function deliveryCanBeAltered($delivery)
+    {
+        return (
+            $delivery->deliveryStatus->status == config('constants.delivery_statuses.making')
+            ||
+            $delivery->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+        );
     }
 }

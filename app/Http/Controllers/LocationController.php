@@ -20,6 +20,7 @@ class LocationController extends Controller
             $location = $this->service->store($request->all());
 
             return response()->json([
+                'header' => 'Localizacion guardada',
                 'status' => 'success',
                 'location' => $location,
             ]);

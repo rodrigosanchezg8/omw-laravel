@@ -17,10 +17,14 @@ return [
         'cancelled' => 'Cancelado',
     ],
 
+    /*Available distances for delivery men in kilometers*/
     'distances' => [
-        'short' => 50,
-        'medium' => 125,
-        'long' => 250
+        'local' => 50,
+        'short' => 125,
+        'medium' => 250,
+        'medium_large' => 500,
+        'large' => 700,
+        'too_large' => 1000,
     ],
 
     'delivery_man_statuses' => [
@@ -28,5 +32,10 @@ return [
         'bussy' => 0,
     ],
 
-    'min_delivery_man_distance_from_origin' => '15',
+    'min_delivery_man_distance_from_origin' => 15,
+
+    'origin_types' => [
+        'sender' => 'sender' ,
+        'receiver' => 'receiver',
+    ]
 ];

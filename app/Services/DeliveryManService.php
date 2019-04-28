@@ -38,16 +38,22 @@ class DeliveryManService
         ])->whereUserId($delivery_man_id)->first();
     }
 
-    public function getAvailableDeliveryMan($coords)
+    public function getAvailableDeliveryMan(Delivery $delivery)
     {
+        $coords = [];
+        $coords['origin_lat'] = $delivery->senderLat;
+        $coords['origin_lng'] = $delivery->senderLng;
+        $coords['destiny_lat'] = $delivery->receiverLat;
+        $coords['destiny_lng'] = $delivery->receiverLng;
+
         $distance = $this->getDistanceBeginingtoEnd($coords);
 
-        $serviceRange = $this->getServiceRange($distance);
+        $serviceRanges = $this->getServiceRanges($distance);
 
-        if ($serviceRange) {
+        if ($serviceRanges) {
 
-            $deliveryMen = DeliveryMan::whereHas('service_range', function ($q) use ($serviceRange) {
-                $q->where('service_ranges.id', $serviceRange->id);
+            $deliveryMen = DeliveryMan::whereHas('service_range', function ($q) use ($serviceRanges) {
+                $q->whereIn('service_ranges.id', $serviceRanges);
             })->where('available', 1)->get();
 
             $deliveryMan = $this->getCloserDeliveryMan($deliveryMen, $coords);
@@ -59,24 +65,44 @@ class DeliveryManService
         }
     }
 
-    private function getServiceRange($distance)
+    private function getServiceRanges($distance)
     {
-        if ($distance <= config('constants.distances.short')) {
+        if ($distance <= config('constants.distances.local')) {
 
-            return ServiceRange::where('km', config('constants.distances.short'))->first();
+            return ServiceRange::where('km', '>=', config('constants.distances.local'))
+                               ->pluck('id')
+                               ->toArray();
+
+        } else if ($distance > config('constants.distances.local') && $distance <= config('constants.distances.short')) {
+
+            return ServiceRange::where('km', '>=', config('constants.distances.short'))
+                               ->pluck('id')
+                               ->toArray();
 
         } else if ($distance > config('constants.distances.short') && $distance <= config('constants.distances.medium')) {
 
-            return ServiceRange::where('km', config('constants.distances.medium'))->first();
+            return ServiceRange::where('km', '>=', config('constants.distances.medium'))
+                               ->pluck('id')
+                               ->toArray();
 
-        } else if ($distance > config('constants.distances.medium') && $distance <= config('constants.distances.long')) {
+        } else if ($distance > config('constants.distances.medium') && $distance <= config('constants.distances.medium_large')) {
 
-            return ServiceRange::where('km', config('constants.distances.long'))->first();
+            return ServiceRange::where('km', '>=', config('constants.distances.medium_large'))
+                               ->pluck('id')
+                               ->toArray();
 
+        } else if ($distance > config('constants.distances.medium_large') && $distance <= config('constants.distances.large')) {
+
+            return ServiceRange::where('km', '>=', config('constants.distances.large'))
+                               ->pluck('id')
+                               ->toArray();
+        } else if ($distance > config('constants.distances.large') && $distance <= config('constants.distances.too_large')) {
+
+            return ServiceRange::where('km', config('constants.distances.too_large'))
+                               ->pluck('id')
+                               ->toArray();
         } else {
-
-            return null;
-
+            return [];
         }
     }
 
@@ -119,6 +145,8 @@ class DeliveryManService
 
     private function getCloserDeliveryMan($deliveryMen, $routeCoords)
     {
+        $closerGuy = null;
+        $closerDistance = null;
         foreach ($deliveryMen as $guy) {
             try {
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
@@ -139,8 +167,12 @@ class DeliveryManService
                 ]);
 
                 if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
+                    if ($closerGuy == null || ($distanceFromGuyToInitialPoint < $closerDistance)) {
 
-                    return $guy;
+                        $closerDistance = $distanceFromGuyToInitialPoint;
+                        $closerGuy = $guy;
+
+                    }
                 }
 
             } catch (\Exception $e) {
@@ -149,7 +181,11 @@ class DeliveryManService
 
         }
 
-        throw new \Exception("No hay un repartidor disponible para la ruta seleccionada", 1);
+        if (!$closerGuy) {
+            throw new \Exception("No hay un repartidor disponible para la ruta seleccionada", 1);
+        }
+
+        return $closerGuy;
 
     }
 }

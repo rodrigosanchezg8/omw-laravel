@@ -79,6 +79,7 @@ class UserController extends Controller
             $user = $this->service->getDetailedClientByEmail($request['email']);
 
             return response()->json([
+                'header' => 'Cliente Encontrado',
                 'status' => 'success',
                 'client' => $user
             ], 200);
@@ -121,7 +122,10 @@ class UserController extends Controller
 
             $this->service->delete($user);
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'header' => 'Usuario Eliminado',
+                'status' => 'success'
+            ]);
 
         } catch (\Exception $e) {
 

@@ -28,9 +28,9 @@ class DeliveryStore extends FormRequest
     {
         return [
             'sender_id.required' => 'La persona que envia el paquete es obligatoria',
-            'sender_id.digits' => 'La persona que envia el paquete no es valido',
+            'sender_id.numeric' => 'La persona que envia el paquete no es valido',
             'receiver_id.required' => 'La persona que recibe el paquete es obligatoria',
-            'receiver_id.digits' => 'La persona que recibe el paquete no es valida',
+            'receiver_id.numeric' => 'La persona que recibe el paquete no es valida',
             'planned_start_date.date' => 'La fecha planeada de salida no es valida',
             'planned_end_date.date' => 'La fecha planeada de llegada no es valida',
             'departure_date.date' => 'La fecha real de salida no es valida',
