@@ -32,6 +32,15 @@ class Delivery extends Model
                 : $this->sender->location->lng;
     }
 
+    public function canChangeToNotStarted()
+    {
+        return (
+                  $this->deliveryStatus->status == config('constants.delivery_statuses.making')
+                  ||
+                  $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+               );
+    }
+
     public function getReceiverLatAttribute()
     {
         return $this->receiver->location->lat;
@@ -44,7 +53,7 @@ class Delivery extends Model
 
     public function deliveryMan()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\DeliveryMan');
     }
 
     public function sender()

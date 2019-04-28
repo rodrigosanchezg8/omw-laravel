@@ -1,6 +1,7 @@
 <?php
 
 return [
+    /*User's stuff*/
     'roles' => [
         'admin' => 'admin',
         'delivery_man' => 'delivery_man',
@@ -8,6 +9,7 @@ return [
         'client' => 'client',
     ],
 
+    /*Deliverie's stuff*/
     'delivery_statuses' => [
         'making' => 'Creando',
         'not_assigned' => 'No asignado',
@@ -17,7 +19,21 @@ return [
         'cancelled' => 'Cancelado',
     ],
 
-    /*Available distances for delivery men in kilometers*/
+    'origin_types' => [
+        'sender' => 'sender' ,
+        'receiver' => 'receiver',
+    ],
+
+    //Extra Arrival time for deliveries in days
+    'default_extra_arrival_time' => 1,
+
+    /*Delivery Men's stuff*/
+    'delivery_man_statuses' => [
+        'available' => 1,
+        'bussy' => 0,
+    ],
+
+    //Available distances for delivery men in kilometers
     'distances' => [
         'local' => 50,
         'short' => 125,
@@ -27,15 +43,5 @@ return [
         'too_large' => 1000,
     ],
 
-    'delivery_man_statuses' => [
-        'available' => 1,
-        'bussy' => 0,
-    ],
-
     'min_delivery_man_distance_from_origin' => 15,
-
-    'origin_types' => [
-        'sender' => 'sender' ,
-        'receiver' => 'receiver',
-    ]
 ];

@@ -7,13 +7,15 @@ use App\Http\Requests\DeliveryAssignGuy;
 use App\Http\Requests\DeliveryChangeStatus;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;
+use App\Services\DeliveryManService;
 use App\Services\DeliveryService;
 use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
-    public function __construct(DeliveryService $service)
+    public function __construct(DeliveryManService $deliveryManService, DeliveryService $service)
     {
+        $this->deliveryManService = $deliveryManService;
         $this->service = $service;
     }
 
@@ -145,15 +147,19 @@ class DeliveryController extends Controller
         }
     }
 
-    public function assign_delivery_man(Delivery $delivery, DeliveryAssignGuy $request)
+    public function set_not_started_protocol(Delivery $delivery)
     {
         try {
 
-            $this->service->assignDeliveryMan($delivery, $request->all());
+            $this->service->checkIfDeliveryHasNotStarted($delivery);
+
+            $closestInfo = $this->deliveryManService->closestDeliveryManWithTime($delivery);
+            $delivery = $this->service->setNotStartedDelivery($delivery, $closestInfo);
 
             return response()->json([
-                'header' => 'Repartidor Asignado',
-                'status' => 'success'
+                'header' => 'Repartidor Encontrado',
+                'status' => 'success',
+                'delivery' => $delivery,
             ]);
 
         } catch (\Exception $e) {

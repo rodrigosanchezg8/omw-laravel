@@ -17,9 +17,14 @@ class DeliveryMan extends Model
         'available'
     ];
 
+    public function getLocationAttribute()
+    {
+        return $this->user->location;
+    }
+
     public function deliveries()
     {
-        return $this->hasMany('App\Delivery');    
+        return $this->hasMany('App\Delivery');
     }
 
     public function user()

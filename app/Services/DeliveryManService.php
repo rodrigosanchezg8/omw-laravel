@@ -170,7 +170,7 @@ class DeliveryManService
         foreach ($deliveryMen as $guy) {
             try {
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
-                $guyFixedLocation = $guy->user->location;
+                $guyFixedLocation = $guy->location;
 
                 $fromGuyToInitialPointInfo = $this->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
@@ -190,12 +190,12 @@ class DeliveryManService
                 ]);
 
                 $distanceFromGuyToEndPoint = $fromGuyToEndPoint['distance'];
-                $timeFromGuyToEndPoint = $fromGuyToEndPoint['distance'];
+                $timeFromGuyToEndPoint = $fromGuyToEndPoint['time'];
 
                 if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
                     if ($closestGuy == null || ($distanceFromGuyToInitialPoint < $closestDistance)) {
                         $closestDistance = $distanceFromGuyToInitialPoint;
-                        $totalTime = $distanceFromGuyToInitialPoint + $timeFromGuyToEndPoint;
+                        $totalTime = $timeFromGuyToInitialPoint + $timeFromGuyToEndPoint;
                         $closestGuy = $guy;
                     }
                 }

@@ -19,13 +19,13 @@ class CreateDeliveriesTable extends Migration
             $table->integer('sender_id')->unsigned();
             $table->integer('receiver_id')->unsigned();
             $table->boolean('company_is_sending')->default(0);
-            $table->date('planned_start_date')->nullable();
-            $table->date('planned_end_date')->nullable();
-            $table->date('departure_date')->nullable();
-            $table->date('arrival_date')->nullable();
+            $table->dateTime('planned_start_date')->nullable();
+            $table->dateTime('planned_end_date')->nullable();
+            $table->dateTime('departure_date')->nullable();
+            $table->dateTime('arrival_date')->nullable();
             $table->integer('delivery_status_id')->unsigned()->default(1);
 
-            $table->foreign('delivery_man_id')->references('id')->on('users');
+            $table->foreign('delivery_man_id')->references('id')->on('delivery_men');
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('receiver_id')->references('id')->on('users');
             $table->foreign('delivery_status_id')->references('id')->on('delivery_statuses');

@@ -21,16 +21,18 @@ class UserService
             'company',
             'location'
         ])->roleFilter($role)
-            ->get();
+          ->get();
     }
 
     public function store($data)
     {
         $user = User::create($data);
+
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
         ]);
+
         $user->location()->associate($location);
         $user->save();
 
@@ -49,9 +51,8 @@ class UserService
     {
         return User::with([
             'roles',
-            'company' => function ($query) {
-                return $query->with('location');
-            },
+            'company',
+            'company.location',
             'location'
         ])->find($user_id);
     }
@@ -60,15 +61,15 @@ class UserService
     {
         $user = User::whereEmail($email)->with([
             'roles',
-            'company' => function ($query) {
-                return $query->with('location');
-            },
+            'company',
+            'company.location',
             'location'
         ])->first();
 
 
-        if (!$user)
+        if (!$user) {
             throw new \Exception("No hay ningún cliente con éste correo", 1);
+        }
 
         return $user;
     }
@@ -77,10 +78,12 @@ class UserService
     {
         $user->update($data);
         $user->location()->dissociate();
+
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
         ]);
+        
         $user->location()->associate($location);
         $user->save();
 

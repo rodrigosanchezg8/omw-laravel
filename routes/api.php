@@ -55,10 +55,9 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
 
     Route::get('delivery_men', 'DeliveryManController@index')->name('delivery_men.index');
-    Route::get('delivery_men/{delivery}/closest_delivery_man', 'DeliveryManController@closest_delivery_man')->name('delivery_men.closest_delivery_man');
 
     Route::get('deliveries/{delivery}/cancel', 'DeliveryController@cancel')->name('deliveries.cancel');
-    Route::put('deliveries/{delivery}/assign_delivery_man', 'DeliveryController@assign_delivery_man')->name('deliveries.assign_delivery_man');
+    Route::put('deliveries/{delivery}/set_not_started_protocol', 'DeliveryController@set_not_started_protocol');
     Route::delete('deliveries/{delivery}', 'DeliveryController@destroy')->name('deliveries.destroy');
 });
 

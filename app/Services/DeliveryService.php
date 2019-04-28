@@ -79,7 +79,7 @@ class DeliveryService
     {
         $delivery = Delivery::create($data);
 
-        return Delivery::with([
+        $delivery->load([
             'sender',
             'receiver',
             'sender.location',
@@ -87,8 +87,9 @@ class DeliveryService
             'sender.company.location',
             'receiver.company.location',
             'deliveryStatus',
-        ])->where('id', $delivery->id)
-          ->first();
+        ]);
+
+        return $delivery;
     }
 
     public function update(Delivery $delivery, $data)
@@ -156,16 +157,6 @@ class DeliveryService
 
     }
 
-    public function assignDeliveryMan(Delivery $delivery, $data)
-    {
-        $delivery->delivery_man_id = $data->delivery_man_id;
-
-        $deliveryMan = DeliveryMan::find($data->delivery_man_id);
-
-        $deliveryMan->available = config('constants.delivery_man_statuses.bussy');
-        $deliveryMan->save();
-    }
-
     public function changeStatus(Delivery $delivery, $data)
     {
         $deliveryStatus = DeliveryStatus::where('status', $data['delivery_status'])->first();
@@ -186,13 +177,39 @@ class DeliveryService
         }
     }
 
+    public function checkIfDeliveryHasNotStarted(Delivery $delivery)
+    {
+        if (!$delivery->canChangeToNotStarted()) {
+
+            throw new \Exception("El status de la entrega no permite que se actualice", 1);
+
+        }
+    }
+
     public function setNotStartedDelivery(Delivery $delivery, $notStartedDeliveryInfo)
     {
-        $delivery->planned_start_date = now()->toDateStringFormat();
-        $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['time']);
-        $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man_id'];
+        $delivery->planned_start_date = now()->toDateTimeString();
+        $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['total_time'])
+                                           ->addDays(config('constants.default_extra_arrival_time'))
+                                           ->toDateTimeString();
+
+        $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man']->id;
+        $delivery->delivery_status_id = DeliveryStatus::where(
+                                                                'status',
+                                                                config('constants.delivery_statuses.not_started')
+                                                             )->first()
+                                                              ->id;
 
         $delivery->save();
+
+        $delivery->load([
+            'sender',
+            'receiver',
+            'deliveryMan',
+            'deliveryMan.user',
+            'deliveryMan.service_range',
+            'deliveryStatus',
+        ]);
 
         return $delivery;
     }
