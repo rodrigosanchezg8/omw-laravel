@@ -100,11 +100,11 @@ class DeliveryProductController extends Controller
         }
     }
 
-    public function delete(DeliveryProduct $deliveryProduct)
+    public function destroy(DeliveryProduct $deliveryProduct)
     {
         try {
 
-            $this->service->delete($deliveryProduct);
+            $this->service->destroy($deliveryProduct);
 
             return response()->json([
                 'header' => 'Producto Eliminado',

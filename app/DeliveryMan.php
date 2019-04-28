@@ -17,6 +17,11 @@ class DeliveryMan extends Model
         'available'
     ];
 
+    public function deliveries()
+    {
+        return $this->hasMany('App\Delivery');    
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');

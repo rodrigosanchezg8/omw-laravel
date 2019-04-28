@@ -14,7 +14,7 @@ class DeliveryChangeStatus extends FormRequest
     public function rules()
     {
         return [
-            'delivery_status_id' => 'required|numeric',
+            'delivery_status' => 'required|string',
         ];
 
     }
@@ -22,7 +22,7 @@ class DeliveryChangeStatus extends FormRequest
     {
         return [
             'delivery_status_id.required' => 'El campo status es obligatorio',
-            'delivery_status_id.numeric' => 'EL campo status ingresado no es valido',
+            'delivery_status_id.string' => 'EL campo status ingresado no es valido',
         ];
     }
 }

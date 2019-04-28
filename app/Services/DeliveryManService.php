@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Delivery;
 use App\DeliveryMan;
+use App\DeliveryStatus;
 use App\ServiceRange;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class DeliveryManService
 {
-
     public function __construct(Client $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
@@ -49,13 +49,21 @@ class DeliveryManService
         $distance = $this->getDistanceBeginingtoEnd($coords);
 
         $serviceRanges = $this->getServiceRanges($distance);
+        $validStatuses = $this->getValidStatuses();
 
         if ($serviceRanges) {
 
             $deliveryMen = DeliveryMan::whereHas('service_range', function ($q) use ($serviceRanges) {
                 $q->whereIn('service_ranges.id', $serviceRanges);
-            })->where('available', 1)->get();
-
+            })
+            ->where(function ($q) use ($validStatuses){
+                $q->whereDoesntHave('deliveries')
+                  ->orWhereHas('deliveries', function ($q) use($validStatuses) {
+                      $q->whereIn('delivery_status_id', $validStatuses);
+                  });
+            })
+            ->where('available', 1)->get();
+            
             $deliveryMan = $this->getCloserDeliveryMan($deliveryMen, $coords);
 
             return $deliveryMan;
@@ -104,6 +112,14 @@ class DeliveryManService
         } else {
             return [];
         }
+    }
+
+    private function getValidStatuses()
+    {
+        return DeliveryStatus::whereIn('status', [
+            config('constants.delivery_statuses.cancelled'),
+            config('constants.delivery_statuses.finished'),
+        ])->pluck('id')->toArray();
     }
 
     private function getDistanceBeginingtoEnd($coords)
@@ -168,7 +184,6 @@ class DeliveryManService
 
                 if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
                     if ($closerGuy == null || ($distanceFromGuyToInitialPoint < $closerDistance)) {
-
                         $closerDistance = $distanceFromGuyToInitialPoint;
                         $closerGuy = $guy;
 

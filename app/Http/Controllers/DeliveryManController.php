@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Delivery;
 use App\DeliveryMan;
 use App\Http\Requests\DeliveryManUpdate;
 use App\ServiceRange;

@@ -76,12 +76,23 @@ class DeliveryService
 
     public function create($data)
     {
-        return Delivery::create($data);
+        $delivery = Delivery::create($data);
+
+        return Delivery::with([
+            'sender',
+            'receiver',
+            'sender.location',
+            'receiver.location',
+            'sender.company.location',
+            'receiver.company.location',
+            'deliveryStatus',
+        ])->where('id', $delivery->id)
+          ->first();
     }
 
     public function update(Delivery $delivery, $data)
     {
-        if ($this->deliveryCanBeAltered($delivery)) {
+        if ($delivery->canBeAltered()) {
 
             $delivery->update($data);
 
@@ -93,12 +104,13 @@ class DeliveryService
 
     public function destroy(Delivery $delivery)
     {
-        if (Auth::user()->hasRole('client') && !$this->deliveryCanBeAltered($delivery)) {
+        if (Auth::user()->hasRole('client') && !$delivery->canBeAltered()) {
             throw new \Exception("El status de la entrega no permite que se elimine", 1);
         }
 
         $delivery->locationTracks()->delete();
-        $delivery->products();
+        $delivery->products()->delete();
+        $delivery->delete();
     }
 
     public function getDetailedDelivery($delivery_id)
@@ -108,6 +120,8 @@ class DeliveryService
             'sender',
             'receiver',
             'deliveryStatus',
+            'sender.location',
+            'receiver.location',
         ];
 
         if (!Auth::user()->hasRole('delivery_man')){
@@ -153,7 +167,13 @@ class DeliveryService
 
     public function changeStatus(Delivery $delivery, $data)
     {
-        if (DeliveryStatus::find($data['delivery_status_id'])->status == config('constants.delivery_statuses.cancelled')) {
+        $deliveryStatus = DeliveryStatus::where('status', $data['delivery_status'])->first();
+
+        if (!$deliveryStatus) {
+            throw new \Exception("Status no encontrado", 1);
+        }
+
+        if ($deliveryStatus->status == config('constants.delivery_statuses.cancelled')) {
 
             throw new \Exception("No es posible cancelar el envio", 1);
 
@@ -163,14 +183,5 @@ class DeliveryService
             $delivery->save();
 
         }
-    }
-
-    private function deliveryCanBeAltered($delivery)
-    {
-        return (
-            $delivery->deliveryStatus->status == config('constants.delivery_statuses.making')
-            ||
-            $delivery->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
-        );
     }
 }

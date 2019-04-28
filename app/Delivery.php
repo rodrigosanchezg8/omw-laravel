@@ -71,4 +71,12 @@ class Delivery extends Model
     {
         return $this->hasMany('App\DeliveryProduct');
     }
+
+    public function canBeAltered()
+    {
+        return ($this->deliveryStatus->status == config('constants.delivery_statuses.making')
+                ||
+               $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+        );
+    }
 }
