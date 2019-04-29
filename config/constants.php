@@ -12,7 +12,7 @@ return [
     /*Deliverie's stuff*/
     'delivery_statuses' => [
         'making' => 'Creando',
-        'not_assigned' => 'No asignado',
+        'not_assigned' => 'No Asignado',
         'not_started' => 'No Iniciado',
         'in_progress' => 'En Progreso',
         'finished' => 'Entregado',
