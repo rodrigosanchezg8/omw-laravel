@@ -130,6 +130,9 @@ class DeliveryService
     {
         $allowedRelationships = [
             'deliveryMan',
+            'deliveryMan.user',
+            'deliveryMan.user.location',
+            'deliveryMan.service_range',
             'sender',
             'receiver',
             'deliveryStatus',
@@ -220,6 +223,7 @@ class DeliveryService
             'receiver',
             'deliveryMan',
             'deliveryMan.user',
+            'deliveryMan.user.location',
             'deliveryMan.service_range',
             'deliveryStatus',
         ]);

@@ -126,9 +126,10 @@ class DeliveryManService
     {
         $apiKey = config('apis.mapquest.customer_key');
 
-        $url = config('apis.mapquest.mapquest_distance_matrix_url');
+        $baseUrl = config('apis.mapquest.base_url');
+        $url = $baseUrl. config('apis.mapquest.distance_matrix_url');
         $url = str_replace('mapquestApiKey', $apiKey, $url);
-
+        
         $payload = [
             "locations" => [
                 [
