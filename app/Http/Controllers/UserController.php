@@ -97,7 +97,8 @@ class UserController extends Controller
     public function update(User $user, UserUpdate $request)
     {
         try {
-            $this->service->update($user, $request->all());
+
+            $user = $this->service->update($user, $request->all());
 
             return response()->json([
                 'status' => 200,

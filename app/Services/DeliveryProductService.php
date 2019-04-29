@@ -64,6 +64,8 @@ class DeliveryProductService
             File::upload_file($deliveryProduct, $data['product_image'], 'product_image');
 
         }
+
+        return $deliveryProduct;
     }
 
     public function destroy(DeliveryProduct $deliveryProduct)

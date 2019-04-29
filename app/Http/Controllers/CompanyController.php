@@ -78,12 +78,13 @@ class CompanyController extends Controller
     {
         try {
 
-            $this->service->update($company, $request->all());
+            $company = $this->service->update($company, $request->all());
 
             return response()->json([
                 'header' => 'Éxito',
                 'message' => 'Compañia actualizada.',
-                'status' => 200
+                'company' => $company,
+                'status' => 200,
             ]);
 
         } catch (\Exception $e) {

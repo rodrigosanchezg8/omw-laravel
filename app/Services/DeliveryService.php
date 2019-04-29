@@ -98,6 +98,8 @@ class DeliveryService
 
             $delivery->update($data);
 
+            return $delivery;
+
         } else {
 
             throw new \Exception("El status de la entrega no permite que se actualicen datos", 1);

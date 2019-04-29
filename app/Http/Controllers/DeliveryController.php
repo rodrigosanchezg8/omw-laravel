@@ -87,11 +87,12 @@ class DeliveryController extends Controller
     {
         try {
 
-            $this->service->update($delivery, $request->all());
+            $delivery = $this->service->update($delivery, $request->all());
 
             return response()->json([
                 'header' => 'Entrega Actualizada',
                 'status' => 'success',
+                'delivery' => $delivery,
             ]);
 
         } catch (\Exception $e) {

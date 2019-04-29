@@ -83,7 +83,7 @@ class UserService
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
         ]);
-        
+
         $user->location()->associate($location);
         $user->save();
 
@@ -94,6 +94,8 @@ class UserService
 
             File::upload_file($user, $data['profile_photo'], 'profile_photo');
         }
+
+        return $user;
     }
 
 

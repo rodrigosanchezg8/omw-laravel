@@ -62,6 +62,8 @@ class CompanyService
 
             File::upload_file($company, $data['profile_photo'], 'profile_photo');
         }
+
+        return $company;
     }
 
     public function delete(Company $company)

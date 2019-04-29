@@ -83,11 +83,12 @@ class DeliveryProductController extends Controller
     {
         try {
 
-            $this->service->update($deliveryProduct, $request->all());
+            $deliveryProduct = $this->service->update($deliveryProduct, $request->all());
 
             return response()->json([
                 'header' => 'Producto actualizado',
                 'status' => 'success',
+                'delivery_product' => $deliveryProduct,
             ]);
 
         } catch (\Exception $e) {
