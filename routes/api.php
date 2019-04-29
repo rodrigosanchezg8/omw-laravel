@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth:api', 'role:client']], function () {
     Route::get('users/clients/by_email', 'UserController@showClientByEmail');
 
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
-    Route::put('deliveries/{delivery}/update', 'DeliveryController@update')->name('deliveries.update');
+    Route::put('deliveries/{delivery}', 'DeliveryController@update')->name('deliveries.update');
 
     Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
     Route::resource('delivery_products', 'DeliveryProductController');

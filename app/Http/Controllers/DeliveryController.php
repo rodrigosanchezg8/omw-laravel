@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Delivery;
-use App\Http\Requests\DeliveryAssignGuy;
 use App\Http\Requests\DeliveryChangeStatus;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;

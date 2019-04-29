@@ -24,6 +24,8 @@ class CreateDeliveriesTable extends Migration
             $table->dateTime('departure_date')->nullable();
             $table->dateTime('arrival_date')->nullable();
             $table->integer('delivery_status_id')->unsigned()->default(1);
+            $table->decimal('score')->nullable();
+            $table->text('comment_by_client')->nullable();
 
             $table->foreign('delivery_man_id')->references('id')->on('delivery_men');
             $table->foreign('sender_id')->references('id')->on('users');

@@ -94,11 +94,12 @@ class DeliveryService
 
     public function update(Delivery $delivery, $data)
     {
-        if ($delivery->canBeAltered()) {
+        if ($delivery->canBeAltered() && !Auth::user()->isReceivingDelivery($delivery)) {
 
             $delivery->update($data);
 
         } else {
+
             throw new \Exception("El status de la entrega no permite que se actualicen datos", 1);
 
         }
@@ -106,8 +107,16 @@ class DeliveryService
 
     public function destroy(Delivery $delivery)
     {
+        if (Auth::user()->isReceivingDelivery($delivery)) {
+
+            throw new \Exception("No puedes borrar entregas que no te corresponden", 1);
+
+        }
+
         if (Auth::user()->hasRole('client') && !$delivery->canBeAltered()) {
+
             throw new \Exception("El status de la entrega no permite que se elimine", 1);
+
         }
 
         $delivery->locationTracks()->delete();
@@ -122,6 +131,8 @@ class DeliveryService
             'sender',
             'receiver',
             'deliveryStatus',
+            'sender.company',
+            'sender.company.location',
             'sender.location',
             'receiver.location',
         ];

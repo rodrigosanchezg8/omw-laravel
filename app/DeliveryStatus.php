@@ -31,4 +31,13 @@ class DeliveryStatus extends Model
     {
         return $query->where('status', config('constants.delivery_statuses.cancelled'));
     }
+
+    public static function inProgressStatuses()
+    {
+        return DeliveryStatus::whereNotIn('status', [
+            config('constants.delivery_statuses.finished'),
+            config('constants.delivery_statuses.cancelled'),
+        ])->pluck('id')
+          ->toArray();
+    }
 }
