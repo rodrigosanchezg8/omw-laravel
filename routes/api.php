@@ -59,6 +59,9 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::get('deliveries/{delivery}/cancel', 'DeliveryController@cancel')->name('deliveries.cancel');
     Route::put('deliveries/{delivery}/set_not_started_protocol', 'DeliveryController@set_not_started_protocol');
     Route::delete('deliveries/{delivery}', 'DeliveryController@destroy')->name('deliveries.destroy');
+
+    Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
+    Route::resource('delivery_products', 'DeliveryProductController');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:client']], function () {
@@ -66,9 +69,6 @@ Route::group(['middleware' => ['auth:api', 'role:client']], function () {
 
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
     Route::put('deliveries/{delivery}', 'DeliveryController@update')->name('deliveries.update');
-
-    Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
-    Route::resource('delivery_products', 'DeliveryProductController');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
