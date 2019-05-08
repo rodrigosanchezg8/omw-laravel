@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('users', 'UserController@store')->name('users.store');
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup_company', 'AuthController@signup_company');
@@ -38,7 +40,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('users', 'UserController@index')->name('users.index');
-    Route::post('users', 'UserController@store')->name('users.store');
     Route::put('users/{user}', 'UserController@update')->name('users.update');
     Route::delete('users/{user}', 'UserController@delete')->name('users.delete');
 
