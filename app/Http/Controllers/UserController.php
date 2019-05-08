@@ -72,10 +72,33 @@ class UserController extends Controller
         }
     }
 
+    public function showClientByEmail(request $request)
+    {
+        try {
+
+            $user = $this->service->getDetailedClientByEmail($request['email']);
+
+            return response()->json([
+                'header' => 'Cliente Encontrado',
+                'status' => 'success',
+                'client' => $user
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
     public function update(User $user, UserUpdate $request)
     {
         try {
-            $this->service->update($user, $request->all());
+
+            $user = $this->service->update($user, $request->all());
 
             return response()->json([
                 'status' => 200,
@@ -100,7 +123,10 @@ class UserController extends Controller
 
             $this->service->delete($user);
 
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                'header' => 'Usuario Eliminado',
+                'status' => 'success'
+            ]);
 
         } catch (\Exception $e) {
 

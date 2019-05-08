@@ -21,17 +21,18 @@ class UserService
             'company',
             'location'
         ])->roleFilter($role)
-            ->get();
+          ->get();
     }
 
     public function store($data)
     {
         $user = User::create($data);
+
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
+
         $user->location()->associate($location);
         $user->save();
 
@@ -50,22 +51,39 @@ class UserService
     {
         return User::with([
             'roles',
-            'company' => function ($query) {
-                return $query->with('location');
-            },
+            'company',
+            'company.location',
             'location'
         ])->find($user_id);
+    }
+
+    public function getDetailedClientByEmail($email)
+    {
+        $user = User::whereEmail($email)->with([
+            'roles',
+            'company',
+            'company.location',
+            'location'
+        ])->first();
+
+
+        if (!$user) {
+            throw new \Exception("No hay ningún cliente con éste correo", 1);
+        }
+
+        return $user;
     }
 
     public function update(User $user, $data)
     {
         $user->update($data);
         $user->location()->dissociate();
+
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
+
         $user->location()->associate($location);
         $user->save();
 
@@ -76,6 +94,8 @@ class UserService
 
             File::upload_file($user, $data['profile_photo'], 'profile_photo');
         }
+
+        return $user;
     }
 
 

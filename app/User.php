@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Delivery;
+use App\DeliveryStatus;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,6 +50,20 @@ class User extends Authenticatable
 
     protected $guard_name = 'api';
 
+    public function isReceivingDelivery(Delivery $delivery)
+    {
+        return ($this->deliveriesAsReceiverInProgress()
+                    ->where('id', $delivery->id)
+                    ->count()) > 0;
+    }
+
+    public function isSendingDelivery(Delivery $delivery)
+    {
+        return ($this->deliveriesAsSenderInProgress()
+                    ->where('id', $delivery->id)
+                    ->count()) > 0;
+    }
+
     public function scopeRoleFilter($query, $role)
     {
         return $query->whereHas('roles', function ($q) use ($role) {
@@ -77,6 +93,32 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
+    public function deliveriesAsSender()
+    {
+        return $this->hasMany('App\Delivery', 'sender_id');
+    }
+
+    public function deliveriesAsReceiver()
+    {
+        return $this->hasMany('App\Delivery', 'receiver_id');
+    }
+
+    public function deliveriesAsSenderInProgress()
+    {
+        $inProgressStatuses = DeliveryStatus::inProgressStatuses();
+
+        return $this->deliveriesAsSender()
+                    ->whereIn('delivery_status_id', $inProgressStatuses);
+    }
+
+    public function deliveriesAsReceiverInProgress()
+    {
+        $inProgressStatuses = DeliveryStatus::inProgressStatuses();
+
+        return $this->deliveriesAsReceiver()
+                    ->whereIn('delivery_status_id', $inProgressStatuses);
+    }
+
     public function location()
     {
         return $this->belongsTo('App\Location');
@@ -97,8 +139,8 @@ class User extends Authenticatable
         return $this->morphMany('App\File', 'fileable');
     }
 
-    public function deliveryManServiceOptions()
+    public function deliveryMan()
     {
-        return $this->hasMany('App\DeliveryManServiceOptions');
+        return $this->hasOne('App\DeliveryMan');
     }
 }

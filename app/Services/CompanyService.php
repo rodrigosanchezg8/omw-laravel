@@ -23,7 +23,6 @@ class CompanyService
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
         $company->location()->associate($location);
         $company->save();
@@ -52,7 +51,6 @@ class CompanyService
         $location = Location::create([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
-            'origin' => 'address'
         ]);
         $company->location()->associate($location);
         $company->save();
@@ -64,6 +62,8 @@ class CompanyService
 
             File::upload_file($company, $data['profile_photo'], 'profile_photo');
         }
+
+        return $company;
     }
 
     public function delete(Company $company)

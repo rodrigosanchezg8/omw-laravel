@@ -29,6 +29,11 @@ class File extends Model
         return $this->morphedByMany('App\Company', 'fileable');
     }
 
+    public function deliveryProducts()
+    {
+        return $this->morphedByMany('App\DeliveryProduct', 'fileable');
+    }
+
     public static function upload_file($model, $base64, $name)
     {
         $folder = $name . 's';

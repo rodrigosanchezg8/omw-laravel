@@ -23,11 +23,17 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('deliveries', 'DeliveryController@index')->name('deliveries.index');
+    Route::get('deliveries/{delivery}/show', 'DeliveryController@show')->name('deliveries.show');
+    Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
 
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('delivery_man/service_ranges', 'DeliveryManController@get_service_ranges');
-    Route::get('delivery_man/{user}', 'DeliveryManController@show');
-    Route::resource('delivery_man', 'DeliveryManController');
+    Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges')->name('delivery_men.service_ranges');
+    Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('delivery_men.show');
+
+    Route::post('locations', 'LocationController@store')->name('locations.store');
+
+    Route::get('delivery_location_tracks', 'DeliveryLocationTrackController@index')->name('delivery_location_tracks.index');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
@@ -40,11 +46,30 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
-
     Route::get('users/{user}', 'UserController@show')->name('users.show');
 
     Route::get('companies', 'CompanyController@index')->name('companies.index');
     Route::post('companies', 'CompanyController@store')->name('companies.store');
     Route::get('companies/{company}', 'CompanyController@show')->name('companies.show');
     Route::put('companies/{company}', 'CompanyController@update')->name('companies.update');
+    Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+
+    Route::get('delivery_men', 'DeliveryManController@index')->name('delivery_men.index');
+
+    Route::get('deliveries/{delivery}/cancel', 'DeliveryController@cancel')->name('deliveries.cancel');
+    Route::put('deliveries/{delivery}/set_not_started_protocol', 'DeliveryController@set_not_started_protocol');
+    Route::delete('deliveries/{delivery}', 'DeliveryController@destroy')->name('deliveries.destroy');
+    Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
+    Route::put('deliveries/{delivery}', 'DeliveryController@update')->name('deliveries.update');
+
+    Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
+    Route::resource('delivery_products', 'DeliveryProductController');
+
+    Route::get('users/clients/by_email', 'UserController@showClientByEmail');
+});
+
+Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
+    Route::post('delivery_men', 'DeliveryManController@store')->name('delivery_men.store');
+
+    Route::post('delivery_location_tracks', 'DeliveryLocationTrackController@store')->name('delivery_location_tracks.store');
 });

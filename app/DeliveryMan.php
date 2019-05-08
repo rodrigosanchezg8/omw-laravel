@@ -5,8 +5,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryManServiceOptions extends Model
+class DeliveryMan extends Model
 {
+    public $tablename = 'delivery_men';
 
     protected $table = 'delivery_men';
 
@@ -15,6 +16,16 @@ class DeliveryManServiceOptions extends Model
         'service_range_id',
         'available'
     ];
+
+    public function getLocationAttribute()
+    {
+        return $this->user->location;
+    }
+
+    public function deliveries()
+    {
+        return $this->hasMany('App\Delivery');
+    }
 
     public function user()
     {

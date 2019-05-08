@@ -36,6 +36,12 @@ class AuthController extends Controller
         }
 
         $token->save();
+        
+        $user->load([
+            'company',
+            'company.location',
+            'location',
+        ]);
 
         return response()->json([
             'header' => 'Éxito',
