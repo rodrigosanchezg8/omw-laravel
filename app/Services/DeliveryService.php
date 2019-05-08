@@ -27,21 +27,21 @@ class DeliveryService
 
         if (Auth::user()->hasRole('delivery_man')) {
             $list = Delivery::with($allowedRelationships)
-                               ->where('delivery_man_id', Auth::user()->deliveryMan->id);
+                ->where('delivery_man_id', Auth::user()->deliveryMan->id);
 
         } else {
 
             $allowedRelationships[] = 'products';
             $allowedStatuses[] = DeliveryStatus::where(
-                                                        'status',
-                                                        config('constants.delivery_statuses.in_progress')
-                                               )->first()->id;
+                'status',
+                config('constants.delivery_statuses.in_progress')
+            )->first()->id;
 
             $list = Delivery::with($allowedRelationships);
 
             if (Auth::user()->hasRole('client')) {
 
-                if(isset($request['origin'])) {
+                if (isset($request['origin'])) {
 
                     switch ($request['origin']) {
                         case config('constants.origin_types.sender'):
@@ -52,12 +52,12 @@ class DeliveryService
                             break;
                         default:
                             $list->where('sender_id', Auth::user()->id)
-                                 ->orWhere('receiver_id', Auth::user()->id);
+                                ->orWhere('receiver_id', Auth::user()->id);
                     }
 
                 } else {
                     $list->where('sender_id', Auth::user()->id)
-                         ->orWhere('receiver_id', Auth::user()->id);
+                        ->orWhere('receiver_id', Auth::user()->id);
                 }
             }
 
@@ -129,6 +129,7 @@ class DeliveryService
     public function getDetailedDelivery($delivery_id)
     {
         $allowedRelationships = [
+            'locationTracks.location',
             'deliveryMan',
             'deliveryMan.user',
             'deliveryMan.user.location',
@@ -142,7 +143,7 @@ class DeliveryService
             'receiver.location',
         ];
 
-        if (!Auth::user()->hasRole('delivery_man')){
+        if (!Auth::user()->hasRole('delivery_man')) {
             $allowedRelationships[] = 'products';
         }
 
@@ -206,15 +207,15 @@ class DeliveryService
     {
         $delivery->planned_start_date = now()->toDateTimeString();
         $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['total_time'])
-                                           ->addDays(config('constants.default_extra_arrival_time'))
-                                           ->toDateTimeString();
+            ->addDays(config('constants.default_extra_arrival_time'))
+            ->toDateTimeString();
 
         $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man']->id;
         $delivery->delivery_status_id = DeliveryStatus::where(
-                                                                'status',
-                                                                config('constants.delivery_statuses.not_started')
-                                                             )->first()
-                                                              ->id;
+            'status',
+            config('constants.delivery_statuses.not_started')
+        )->first()
+            ->id;
 
         $delivery->save();
 
