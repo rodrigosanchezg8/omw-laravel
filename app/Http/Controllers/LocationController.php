@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Location;
 use App\Http\Requests\LocationStore;
 use App\Services\LocationService;
 use Illuminate\Http\Request;

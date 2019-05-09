@@ -6,14 +6,14 @@ use App\Delivery;
 use App\DeliveryMan;
 use App\DeliveryStatus;
 use App\ServiceRange;
-use GuzzleHttp\Client;
+use App\Services\MapQuestService;
 use Illuminate\Support\Facades\Log;
 
 class DeliveryManService
 {
-    public function __construct(Client $guzzleClient)
+    public function __construct(MapQuestService $mapquestService)
     {
-        $this->guzzleClient = $guzzleClient;
+        $this->mapquestService = $mapquestService;
     }
 
     public function list()
@@ -46,7 +46,7 @@ class DeliveryManService
         $coords['destiny_lat'] = $delivery->receiverLat;
         $coords['destiny_lng'] = $delivery->receiverLng;
 
-        $distance = $this->distanceAndTimeBeginingToEnd($coords)['distance'];
+        $distance = $this->$this->mapquestService->distanceAndTimeBeginingToEnd($coords)['distance'];
 
         $serviceRanges = $this->getServiceRanges($distance);
         $validStatuses = $this->getValidStatuses();
@@ -122,47 +122,6 @@ class DeliveryManService
         ])->pluck('id')->toArray();
     }
 
-    private function distanceAndTimeBeginingToEnd($coords)
-    {
-        $apiKey = config('apis.mapquest.customer_key');
-
-        $baseUrl = config('apis.mapquest.base_url');
-        $url = $baseUrl. config('apis.mapquest.distance_matrix_url');
-        $url = str_replace('mapquestApiKey', $apiKey, $url);
-        
-        $payload = [
-            "locations" => [
-                [
-                    "latLng" => [
-                        "lat" => $coords['origin_lat'],
-                        "lng" => $coords['origin_lng'],
-                    ],
-                ],
-                [
-                    "latLng" => [
-                        "lat" => $coords['destiny_lat'],
-                        "lng" => $coords['destiny_lng'],
-                    ]
-                ],
-            ],
-        ];
-
-        $response = $this->guzzleClient->post($url, [
-            'json' => $payload,
-        ]);
-
-        $jsonResponse = json_decode($response->getBody()->getContents());
-
-        if (!isset($jsonResponse->distance)) {
-            throw new \Exception("No hay una ruta entre los dos puntos proporcionados", 1);
-        }
-
-        return [
-            'distance' => $jsonResponse->distance[1],
-            'time' => $jsonResponse->time[1],
-        ];
-    }
-
     private function closestDeliveryManAndTime($deliveryMen, $routeCoords)
     {
         $closestGuy = null;
@@ -173,7 +132,7 @@ class DeliveryManService
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
                 $guyFixedLocation = $guy->location;
 
-                $fromGuyToInitialPointInfo = $this->distanceAndTimeBeginingToEnd([
+                $fromGuyToInitialPointInfo = $this->$this->mapquestService->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['origin_lat'],
@@ -183,7 +142,7 @@ class DeliveryManService
                 $distanceFromGuyToInitialPoint = $fromGuyToInitialPointInfo['distance'];
                 $timeFromGuyToInitialPoint = $fromGuyToInitialPointInfo['time'];
 
-                $fromGuyToEndPoint = $this->distanceAndTimeBeginingToEnd([
+                $fromGuyToEndPoint = $this->$this->mapquestService->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['destiny_lat'],

@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::post('users', 'UserController@store')->name('users.store');
 
 Route::group(['prefix' => 'auth'], function () {

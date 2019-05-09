@@ -3,13 +3,13 @@
 namespace App\Services;
 
 use App\Location;
-use GuzzleHttp\Client;
+use App\Services\MapQuestService;
 
 class LocationService
 {
-    public function __construct(Client $guzzleClient)
+    public function __construct(MapQuestService $mapquestService)
     {
-        $this->guzzleClient = $guzzleClient;
+        $this->mapquestService = $mapquestService;
     }
 
     public function store($data)
@@ -19,39 +19,23 @@ class LocationService
 
     public function distancesAreTooClose(Location $origin, Location $destiny)
     {
-        $apiKey = config('apis.mapquest.customer_key');
+        $coords = [];
+        $coords['origin_lat'] = $origin->lat;
+        $coords['origin_lng'] = $origin->lng;
+        $coords['destiny_lat'] = $destiny->lat;
+        $coords['destiny_lng'] = $destiny->lng;
 
-        $baseUrl = config('apis.mapquest.base_url');
-        $url = $baseUrl. config('apis.mapquest.distance_matrix_url');
-        $url = str_replace('mapquestApiKey', $apiKey, $url);
+        $distance = $this->mapquestService->distanceAndTimeBeginingToEnd($coords)['distance'];
 
-        $payload = [
-            "locations" => [
-                [
-                    "latLng" => [
-                        "lat" => $origin->lat,
-                        "lng" => $origin->lng,
-                    ],
-                ],
-                [
-                    "latLng" => [
-                        "lat" => $destiny->lat,
-                        "lng" => $destiny->lng,
-                    ]
-                ],
-            ],
-        ];
+        return $distance <= config('constants.distances.too_close');
+    }
 
-        $response = $this->guzzleClient->post($url, [
-            'json' => $payload,
-        ]);
-
-        $jsonResponse = json_decode($response->getBody()->getContents());
-
-        if (!isset($jsonResponse->distance)) {
-            throw new \Exception("No hay una ruta entre los dos puntos proporcionados", 1);
-        }
+    public function getFormattedAddressString(Location $location)
+    {
+        $coords = [];
+        $coords['lat'] = $location->lat;
+        $coords['lng'] = $location->lng;
         
-        return $jsonResponse->distance[1] <= config('constants.distances.too_close');
+        return $this->mapquestService->getFormattedAddressString($coords);
     }
 }
