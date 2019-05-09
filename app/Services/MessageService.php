@@ -32,7 +32,7 @@ class MessageService
         $delivery->updated_at = Carbon::now();
         $delivery->save();
 
-        Event::fire(new NewMessage($message));
+        Event::dispatch(new NewMessage($message));
     }
 
 }

@@ -33,8 +33,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('deliveries/{delivery}/show', 'DeliveryController@show')->name('deliveries.show');
     Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
 
-    Route::get('deliveries/{delivery}/messages/{start_id}', 'DeliveryController@messages');
-    Route::post('deliveries/{delivery}/messages/user/{user}/store', 'MessageController@store');
 
     Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges')->name('delivery_men.service_ranges');
     Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('delivery_men.show');
@@ -68,6 +66,9 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::delete('deliveries/{delivery}', 'DeliveryController@destroy')->name('deliveries.destroy');
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
     Route::put('deliveries/{delivery}', 'DeliveryController@update')->name('deliveries.update');
+
+    Route::get('deliveries/{delivery}/messages/{start_id}', 'DeliveryController@messages');
+    Route::post('deliveries/{delivery}/messages/user/{user}/store', 'MessageController@store');
 
     Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
     Route::resource('delivery_products', 'DeliveryProductController');

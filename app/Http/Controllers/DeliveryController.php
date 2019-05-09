@@ -199,7 +199,7 @@ class DeliveryController extends Controller
     {
         try {
 
-            Event::fire(new DeliveryMessagesHistoryRequested($delivery, $start_message_id));
+            Event::dispatch(new DeliveryMessagesHistoryRequested($delivery, $start_message_id));
 
             return response()->json([
                 'header' => 'Mensajes de la entrega recuperados',
