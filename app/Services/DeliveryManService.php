@@ -46,7 +46,7 @@ class DeliveryManService
         $coords['destiny_lat'] = $delivery->receiverLat;
         $coords['destiny_lng'] = $delivery->receiverLng;
 
-        $distance = $this->$this->mapquestService->distanceAndTimeBeginingToEnd($coords)['distance'];
+        $distance = $this->mapquestService->distanceAndTimeBeginingToEnd($coords)['distance'];
 
         $serviceRanges = $this->getServiceRanges($distance);
         $validStatuses = $this->getValidStatuses();
@@ -56,13 +56,13 @@ class DeliveryManService
             $deliveryMen = DeliveryMan::whereHas('service_range', function ($q) use ($serviceRanges) {
                 $q->whereIn('service_ranges.id', $serviceRanges);
             })
-            ->where(function ($q) use ($validStatuses){
-                $q->whereDoesntHave('deliveries')
-                  ->orWhereHas('deliveries', function ($q) use($validStatuses) {
-                      $q->whereIn('delivery_status_id', $validStatuses);
-                  });
-            })
-            ->where('available', 1)->get();
+                ->where(function ($q) use ($validStatuses) {
+                    $q->whereDoesntHave('deliveries')
+                        ->orWhereHas('deliveries', function ($q) use ($validStatuses) {
+                            $q->whereIn('delivery_status_id', $validStatuses);
+                        });
+                })
+                ->where('available', 1)->get();
 
             $closestInfo = $this->closestDeliveryManAndTime($deliveryMen, $coords);
 
@@ -78,37 +78,37 @@ class DeliveryManService
         if ($distance <= config('constants.distances.local')) {
 
             return ServiceRange::where('km', '>=', config('constants.distances.local'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
 
         } else if ($distance > config('constants.distances.local') && $distance <= config('constants.distances.short')) {
 
             return ServiceRange::where('km', '>=', config('constants.distances.short'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
 
         } else if ($distance > config('constants.distances.short') && $distance <= config('constants.distances.medium')) {
 
             return ServiceRange::where('km', '>=', config('constants.distances.medium'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
 
         } else if ($distance > config('constants.distances.medium') && $distance <= config('constants.distances.medium_large')) {
 
             return ServiceRange::where('km', '>=', config('constants.distances.medium_large'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
 
         } else if ($distance > config('constants.distances.medium_large') && $distance <= config('constants.distances.large')) {
 
             return ServiceRange::where('km', '>=', config('constants.distances.large'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
         } else if ($distance > config('constants.distances.large') && $distance <= config('constants.distances.too_large')) {
 
             return ServiceRange::where('km', config('constants.distances.too_large'))
-                               ->pluck('id')
-                               ->toArray();
+                ->pluck('id')
+                ->toArray();
         } else {
             return [];
         }
