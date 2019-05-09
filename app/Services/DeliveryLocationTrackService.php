@@ -6,10 +6,16 @@ use App\Delivery;
 use App\DeliveryStatus;
 use App\DeliveryLocationTrack;
 use App\Location;
+use App\Services\LocationService;
 use Illuminate\Support\Facades\Auth;
 
 class DeliveryLocationTrackService
 {
+    public function __construct(LocationService $locationService)
+    {
+        $this->locationService = $locationService;
+    }
+
     public function index($data)
     {
         $list = DeliveryLocationTrack::with([
@@ -28,21 +34,41 @@ class DeliveryLocationTrackService
 
     public function store($data)
     {
-        $delivery = Delivery::whereId($data['delivery_id'])->with('locationTracks')->first();
-        $data['step'] = count($delivery->locationTracks) + 1;
+        $delivery = Delivery::find($data['delivery_id'])->load([
+            'locationTracks',
+        ]);
 
-        if ($data['step'] - 1 == 0) {
-            $inProgressStatus = DeliveryStatus::where('status', config('constants.delivery_statuses.in_progress'))
-                ->first();
+        if ($delivery->locationTracksCount() == 0) {
+            $inProgressStatus = DeliveryStatus::inProgress()->first();
 
             $delivery->deliveryStatus()->dissociate();
             $delivery->deliveryStatus()->associate($inProgressStatus);
             $delivery->save();
         }
 
-        $location = Location::create(['lat' => $data['lat'], 'lng' => $data['lng']]);
+        $data['step'] = $delivery->locationTracksCount() + 1;
+
+        $location = Location::create([
+            'lat' => $data['lat'],
+            'lng' => $data['lng'],
+        ]);
+
         $data['location_id'] = $location->id;
 
-        return DeliveryLocationTrack::create($data);
+        if ($this->locationService->distancesAreTooClose($delivery->receiverLocation, $location)) {
+            $finishedStatus = DeliveryStatus::finished()->first();
+
+            $delivery->deliveryStatus()->dissociate();
+            $delivery->deliveryStatus()->associate($finishedStatus);
+            $delivery->save();
+        }
+
+        $deliveryLocationTrack = DeliveryLocationTrack::create($data);
+
+        return $deliveryLocationTrack->load([
+            'location',
+            'delivery',
+            'delivery.deliveryStatus',
+        ]);
     }
 }

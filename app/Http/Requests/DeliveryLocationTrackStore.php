@@ -15,6 +15,8 @@ class DeliveryLocationTrackStore extends FormRequest
     {
         return [
             'delivery_id' => 'required|numeric',
+            'lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
+            'lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
         ];
 
     }
@@ -24,6 +26,10 @@ class DeliveryLocationTrackStore extends FormRequest
         return [
             'delivery_id.required' => 'Es necesario proporcionar un pedido para la localizacion',
             'delivery_id.numeric' => 'El pedido ingresado no esta en un formato valido',
+            'lat.required' => 'Debe ingresar una latitud',
+            'lat.regex' => 'Debe ingresaar una longitud',
+            'lng.required' => 'La latitud no se ingreso correctamente',
+            'lng.regex' => 'La longitud no se ingreso correctamente',
         ];
     }
 }

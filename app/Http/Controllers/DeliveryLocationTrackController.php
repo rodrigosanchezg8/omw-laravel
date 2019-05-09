@@ -46,7 +46,7 @@ class DeliveryLocationTrackController extends Controller
             return response()->json([
                 'header' => 'Entrega actualizada',
                 'status' => 'success',
-                'delivery_location_track' => $deliveryLocationTrack->load('location'),
+                'delivery_location_track' => $deliveryLocationTrack,
             ]);
 
         } catch (\Exception $e) {
