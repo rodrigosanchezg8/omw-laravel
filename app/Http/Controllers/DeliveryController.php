@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Delivery;
-use App\Http\Requests\DeliveryChangeStatus;
+use Illuminate\Http\Request;
+use App\Services\DeliveryService;
+use App\Services\DeliveryManService;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;
-use App\Services\DeliveryManService;
-use App\Services\DeliveryService;
-use Illuminate\Http\Request;
+use App\Http\Requests\DeliveryChangeStatus;
+use App\Events\DeliveryMessagesHistoryRequested;
+use Illuminate\Support\Facades\Event;
 
 class DeliveryController extends Controller
 {
@@ -180,6 +182,27 @@ class DeliveryController extends Controller
 
             return response()->json([
                 'header' => 'Su entrega ha sido enviada',
+                'status' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
+
+    public function messages(Delivery $delivery, $start_message_id = 1)
+    {
+        try {
+
+            Event::fire(new DeliveryMessagesHistoryRequested($delivery, $start_message_id));
+
+            return response()->json([
+                'header' => 'Mensajes de la entrega recuperados',
                 'status' => 'success'
             ]);
 
