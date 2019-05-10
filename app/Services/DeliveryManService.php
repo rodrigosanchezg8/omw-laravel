@@ -132,7 +132,7 @@ class DeliveryManService
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
                 $guyFixedLocation = $guy->location;
 
-                $fromGuyToInitialPointInfo = $this->$this->mapquestService->distanceAndTimeBeginingToEnd([
+                $fromGuyToInitialPointInfo = $this->mapquestService->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['origin_lat'],
@@ -142,7 +142,7 @@ class DeliveryManService
                 $distanceFromGuyToInitialPoint = $fromGuyToInitialPointInfo['distance'];
                 $timeFromGuyToInitialPoint = $fromGuyToInitialPointInfo['time'];
 
-                $fromGuyToEndPoint = $this->$this->mapquestService->distanceAndTimeBeginingToEnd([
+                $fromGuyToEndPoint = $this->mapquestService->distanceAndTimeBeginingToEnd([
                     'origin_lat' => $guyFixedLocation->lat,
                     'origin_lng' => $guyFixedLocation->lng,
                     'destiny_lat' => $routeCoords['destiny_lat'],
@@ -161,7 +161,7 @@ class DeliveryManService
                 }
 
             } catch (\Exception $e) {
-                Log::error("There wasn't a route between the guy and the desired point");
+                Log::error("Error finding a route between the guy and the desired point: ". $e->getMessage(). " ". $e->getLine(). " ". $e->getFile());
             }
 
         }
