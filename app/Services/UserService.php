@@ -27,7 +27,7 @@ class UserService
             'company',
             'location'
         ])->roleFilter($role)
-          ->get();
+            ->get();
     }
 
     public function store($data)
@@ -40,7 +40,7 @@ class UserService
         ]);
 
         $location->plain_text_address = $this->locationService
-                                             ->getFormattedAddressString($location);
+            ->getFormattedAddressString($location);
 
         $location->save();
 
@@ -75,8 +75,8 @@ class UserService
             'company',
             'company.location',
             'location'
-        ])->first();
-
+        ])->roleFilter('client')
+            ->first();
 
         if (!$user) {
             throw new \Exception("No hay ningún cliente con éste correo", 1);
@@ -96,7 +96,7 @@ class UserService
         ]);
 
         $location->plain_text_address = $this->locationService
-                                             ->getFormattedAddressString($location);
+            ->getFormattedAddressString($location);
 
         $location->save();
 
