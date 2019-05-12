@@ -4,10 +4,19 @@ namespace App\Services;
 
 use App\File;
 use App\Company;
-use App\Location;
+use App\Services\FileService;
+use App\Services\LocationService;
 
 class CompanyService
 {
+    public function __construct(
+        FileService $fileService,
+        LocationService $locationService
+        )
+    {
+        $this->fileService = $fileService;
+        $this->locationService = $locationService;
+    }
 
     public function list()
     {
@@ -20,14 +29,20 @@ class CompanyService
     {
         $company = Company::create($data);
 
-        $location = Location::create([
+        $location = $this->locationService->store([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
         ]);
+
+        $location->plain_text_address = $this->locationService
+                                             ->getFormattedAddressString($location);
+
+        $location->save();
+
         $company->location()->associate($location);
         $company->save();
 
-        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
+        if (isset($data['profile_photo']) && $this->fileService->isBase64Image($data['profile_photo'])) {
             File::upload_file($company, $data['profile_photo'], 'profile_photo');
 
         }
@@ -48,14 +63,20 @@ class CompanyService
         $company->update($data);
 
         $company->location()->dissociate();
-        $location = Location::create([
+
+        $location = $this->locationService->store([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
         ]);
+
+        $location->plain_text_address = $this->locationService->getFormattedAddressString($location);
+
+        $location->save();
+
         $company->location()->associate($location);
         $company->save();
 
-        if (isset($data['profile_photo']) && FileService::isBase64Image($data['profile_photo'])) {
+        if (isset($data['profile_photo']) && $this->fileService->isBase64Image($data['profile_photo'])) {
             if ($company->profilePhoto()) {
                 File::delete_file($company->profilePhoto()->path . $company->profilePhoto()->name);
             }

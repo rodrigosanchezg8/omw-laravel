@@ -18,6 +18,30 @@ class Delivery extends Model
         'delivery_status_id',
     ];
 
+    public function canChangeToNotStarted()
+    {
+        return (
+                  $this->deliveryStatus->status == config('constants.delivery_statuses.making')
+                  ||
+                  $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+               );
+    }
+
+    public function locationTracksCount()
+    {
+        return $this->locationTracks->count();
+    }
+
+    public function getSenderLocationAttribute()
+    {
+        return $this->sender->location;
+    }
+
+    public function getReceiverLocationAttribute()
+    {
+        return $this->receiver->location;
+    }
+
     public function getSenderLatAttribute()
     {
         return $this->company_is_sending
@@ -30,15 +54,6 @@ class Delivery extends Model
         return $this->company_is_sending
                 ? $this->sender->company->location->lng
                 : $this->sender->location->lng;
-    }
-
-    public function canChangeToNotStarted()
-    {
-        return (
-                  $this->deliveryStatus->status == config('constants.delivery_statuses.making')
-                  ||
-                  $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
-               );
     }
 
     public function getReceiverLatAttribute()

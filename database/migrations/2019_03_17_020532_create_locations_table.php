@@ -17,6 +17,7 @@ class CreateLocationsTable extends Migration
             $table->increments('id');
             $table->string('lat');
             $table->string('lng');
+            $table->string('plain_text_address')->nullable();
             $table->timestamps();
         });
     }

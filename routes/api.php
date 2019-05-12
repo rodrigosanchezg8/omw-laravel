@@ -12,12 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::post('users', 'UserController@store')->name('users.store');
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
-    Route::post('signup_company', 'AuthController@signup_company');
+    Route::put('users/{user}', 'UserController@update')->name('users.update');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
@@ -26,6 +25,10 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::get('users/{user}', 'UserController@show')->name('users.show');
+    Route::put('users/{user}', 'UserController@update')->name('users.update');
+
     Route::get('deliveries', 'DeliveryController@index')->name('deliveries.index');
     Route::get('deliveries/{delivery}/show', 'DeliveryController@show')->name('deliveries.show');
     Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
@@ -40,14 +43,14 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('users', 'UserController@index')->name('users.index');
-    Route::put('users/{user}', 'UserController@update')->name('users.update');
     Route::delete('users/{user}', 'UserController@delete')->name('users.delete');
 
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
-    Route::get('users/{user}', 'UserController@show')->name('users.show');
+
+    Route::post('signup_company', 'AuthController@signup_company');
 
     Route::get('companies', 'CompanyController@index')->name('companies.index');
     Route::post('companies', 'CompanyController@store')->name('companies.store');

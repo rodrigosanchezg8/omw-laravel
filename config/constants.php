@@ -35,6 +35,7 @@ return [
 
     //Available distances for delivery men in kilometers
     'distances' => [
+        'too_close' => 1,
         'local' => 50,
         'short' => 125,
         'medium' => 250,

@@ -29,7 +29,7 @@ class DeliveryController extends Controller
                 'list' => $list,
             ]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'status' => 'failed',
@@ -51,7 +51,7 @@ class DeliveryController extends Controller
                 'delivery' => $delivery,
             ]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'status' => 'failed',
