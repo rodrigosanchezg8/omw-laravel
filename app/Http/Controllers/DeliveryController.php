@@ -9,8 +9,6 @@ use App\Services\DeliveryManService;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;
 use App\Http\Requests\DeliveryChangeStatus;
-use App\Events\DeliveryMessagesHistoryRequested;
-use Illuminate\Support\Facades\Event;
 
 class DeliveryController extends Controller
 {
@@ -195,24 +193,4 @@ class DeliveryController extends Controller
         }
     }
 
-    public function messages(Delivery $delivery, $start_message_id = 1)
-    {
-        try {
-
-            Event::dispatch(new DeliveryMessagesHistoryRequested($delivery, $start_message_id));
-
-            return response()->json([
-                'header' => 'Mensajes de la entrega recuperados',
-                'status' => 'success'
-            ]);
-
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'status' => 'failed',
-                'message' => $e->getMessage(),
-            ]);
-
-        }
-    }
 }

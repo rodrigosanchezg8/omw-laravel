@@ -67,8 +67,8 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::post('deliveries', 'DeliveryController@store')->name('deliveries.store');
     Route::put('deliveries/{delivery}', 'DeliveryController@update')->name('deliveries.update');
 
-    Route::get('deliveries/{delivery}/messages/{start_id}', 'DeliveryController@messages');
-    Route::post('deliveries/{delivery}/messages/user/{user}/store', 'MessageController@store');
+    Route::get('messages/delivery/{delivery}/start/{start_message_id}', 'MessageController@index');
+    Route::post('messages/delivery/{delivery}', 'MessageController@store');
 
     Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
     Route::resource('delivery_products', 'DeliveryProductController');

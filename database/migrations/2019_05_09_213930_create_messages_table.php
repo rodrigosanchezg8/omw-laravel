@@ -18,7 +18,6 @@ class CreateMessagesTable extends Migration
             $table->string('body');
             $table->unsignedInteger('delivery_id');
             $table->unsignedInteger('user_id_replier');
-            $table->unsignedInteger('user_id_receiver');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
