@@ -65,11 +65,21 @@ class User extends Authenticatable
                 ->count()) > 0;
     }
 
+    public function isAdmin()
+    {
+        return $this->roles()->first()->name == 'admin';
+    }
+
     public function scopeRoleFilter($query, $role)
     {
         return $query->whereHas('roles', function ($q) use ($role) {
             $q->where('name', $role);
         });
+    }
+
+    public function scopeFullName()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 
     public function getFullNameAttribute()

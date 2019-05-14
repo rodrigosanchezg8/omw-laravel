@@ -26,7 +26,7 @@ class MessageService
         $message->receiver()->associate($request->user_id_receiver);
         $message->save();
 
-        if ($request->file) {
+        if (isset($request->file) && $request->file) {
             File::upload_file($delivery, $request->file, 'delivery_message');
         }
 

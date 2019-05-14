@@ -66,6 +66,11 @@ class Delivery extends Model
         return $this->receiver->location->lng;
     }
 
+    public function getDeliveryManFullName()
+    {
+        return $this->deliveryMan()->first()->user()->first()->fullName;
+    }
+
     public function deliveryMan()
     {
         return $this->belongsTo('App\DeliveryMan');

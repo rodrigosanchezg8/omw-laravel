@@ -112,7 +112,7 @@ class DeliveryController extends Controller
             $this->service->destroy($delivery);
 
             return response()->json([
-                'header' => 'Entrega Eliminada',
+                'header' => 'Entrega cancelada',
                 'status' => 'success',
             ]);
 
@@ -179,7 +179,7 @@ class DeliveryController extends Controller
             $this->service->changeStatus($delivery, $request->all());
 
             return response()->json([
-                'header' => 'Su entrega ha sido enviada',
+                'header' => 'Su entrega será revisada por un administrador.',
                 'status' => 'success'
             ]);
 
