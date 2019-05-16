@@ -14,14 +14,14 @@ class StatisticController extends Controller
         $this->service = $service;
     }
 
-    public function monthly_avg_sales_regression(User $user, AvgSalesRegression $request)
+    public function client_linear_regression(User $user, AvgSalesRegression $request)
     {
         try {
 
             $regressionInfo = $this->service->monthlyAvgSalesRegression($user, $request->all());
 
             return response()->json([
-                'header' => 'Cliente Encontrado',
+                'header' => 'Estadistica encontrada',
                 'status' => 'success',
                 'regression_info' => $regressionInfo,
             ], 200);
