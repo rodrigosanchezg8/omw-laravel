@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('test/{user}', 'StatisticController@monthly_avg_sales_regression');
+Route::get('lala/{user}', 'StatisticController@monthly_avg_sales_regression');
 
 Route::post('users', 'UserController@store')->name('users.store');
 
