@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use stdClass;
 use App\Delivery;
 use App\DeliveryMan;
 use App\DeliveryStatus;
@@ -23,6 +24,7 @@ class DeliveryService
             DeliveryStatus::where('status', config('constants.delivery_statuses.not_started'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.in_progress'))->first()->id,
             DeliveryStatus::where('status', config('constants.delivery_statuses.finished'))->first()->id,
+            DeliveryStatus::where('status', config('constants.delivery_statuses.cancelled'))->first()->id,
         ];
 
         if (Auth::user()->hasRole('delivery_man')) {
@@ -109,27 +111,28 @@ class DeliveryService
 
     public function destroy(Delivery $delivery)
     {
-        if (Auth::user()->isReceivingDelivery($delivery)) {
+        if (!Auth::user()->isAdmin()) {
+            if (Auth::user()->isReceivingDelivery($delivery)) {
+                throw new \Exception("No puedes borrar entregas que no has iniciado tú.", 1);
+            }
 
-            throw new \Exception("No puedes borrar entregas que no te corresponden", 1);
-
+            if (Auth::user()->hasRole('client') && !$delivery->canBeAltered()) {
+                throw new \Exception("El status de la entrega no permite que se elimine", 1);
+            }
         }
 
-        if (Auth::user()->hasRole('client') && !$delivery->canBeAltered()) {
-
-            throw new \Exception("El status de la entrega no permite que se elimine", 1);
-
-        }
-
-        $delivery->locationTracks()->delete();
-        $delivery->products()->delete();
-        $delivery->delete();
+        $cancelledStatus = DeliveryStatus::cancelled()->first();
+        $delivery->deliveryStatus()->dissociate();
+        $delivery->deliveryStatus()->associate($cancelledStatus);
+        $delivery->save();
     }
 
     public function getDetailedDelivery($delivery_id)
     {
         $allowedRelationships = [
-            'locationTracks.location',
+            'locationTracks' => function ($query) {
+                $query->orderBy('id', 'asc')->with('location');
+            },
             'deliveryMan',
             'deliveryMan.user',
             'deliveryMan.user.location',
@@ -228,6 +231,15 @@ class DeliveryService
             'deliveryMan.service_range',
             'deliveryStatus',
         ]);
+
+        $deliveryManFullName = $delivery->getDeliveryManFullName();
+        $messageData = new stdClass();
+        $messageData->body = "Tu entrega ha sido asignada a un repartidor. 
+        El nombre del repartidor es $deliveryManFullName. 
+        Él comenzará alrededor de: $delivery->planned_start_date y terminará alrededor de: $delivery->planned_end_date";
+        $messageData->body = substr($messageData->body, 0, 254);
+        $messageData->user_id_receiver = $delivery->receiver_id;
+        MessageService::create($messageData, $delivery);
 
         return $delivery;
     }

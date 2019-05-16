@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Delivery;
-use App\Http\Requests\DeliveryChangeStatus;
+use Illuminate\Http\Request;
+use App\Services\DeliveryService;
+use App\Services\DeliveryManService;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;
-use App\Services\DeliveryManService;
-use App\Services\DeliveryService;
-use Illuminate\Http\Request;
+use App\Http\Requests\DeliveryChangeStatus;
 
 class DeliveryController extends Controller
 {
@@ -112,7 +112,7 @@ class DeliveryController extends Controller
             $this->service->destroy($delivery);
 
             return response()->json([
-                'header' => 'Entrega Eliminada',
+                'header' => 'Entrega cancelada',
                 'status' => 'success',
             ]);
 
@@ -179,7 +179,7 @@ class DeliveryController extends Controller
             $this->service->changeStatus($delivery, $request->all());
 
             return response()->json([
-                'header' => 'Su entrega ha sido enviada',
+                'header' => 'Su entrega será revisada por un administrador.',
                 'status' => 'success'
             ]);
 
@@ -192,4 +192,5 @@ class DeliveryController extends Controller
 
         }
     }
+
 }

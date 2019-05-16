@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Thread;
 use App\Delivery;
 use App\DeliveryStatus;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -53,15 +54,20 @@ class User extends Authenticatable
     public function isReceivingDelivery(Delivery $delivery)
     {
         return ($this->deliveriesAsReceiverInProgress()
-                    ->where('id', $delivery->id)
-                    ->count()) > 0;
+                ->where('id', $delivery->id)
+                ->count()) > 0;
     }
 
     public function isSendingDelivery(Delivery $delivery)
     {
         return ($this->deliveriesAsSenderInProgress()
-                    ->where('id', $delivery->id)
-                    ->count()) > 0;
+                ->where('id', $delivery->id)
+                ->count()) > 0;
+    }
+
+    public function isAdmin()
+    {
+        return $this->roles()->first()->name == 'admin';
     }
 
     public function scopeRoleFilter($query, $role)
@@ -69,6 +75,11 @@ class User extends Authenticatable
         return $query->whereHas('roles', function ($q) use ($role) {
             $q->where('name', $role);
         });
+    }
+
+    public function scopeFullName()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 
     public function getFullNameAttribute()
@@ -108,7 +119,7 @@ class User extends Authenticatable
         $inProgressStatuses = DeliveryStatus::inProgressStatuses();
 
         return $this->deliveriesAsSender()
-                    ->whereIn('delivery_status_id', $inProgressStatuses);
+            ->whereIn('delivery_status_id', $inProgressStatuses);
     }
 
     public function deliveriesAsReceiverInProgress()
@@ -116,7 +127,7 @@ class User extends Authenticatable
         $inProgressStatuses = DeliveryStatus::inProgressStatuses();
 
         return $this->deliveriesAsReceiver()
-                    ->whereIn('delivery_status_id', $inProgressStatuses);
+            ->whereIn('delivery_status_id', $inProgressStatuses);
     }
 
     public function location()
