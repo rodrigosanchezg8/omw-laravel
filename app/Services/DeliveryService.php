@@ -212,7 +212,7 @@ class DeliveryService
         $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['total_time'])
             ->addDays(config('constants.default_extra_arrival_time'))
             ->toDateTimeString();
-
+        $delivery->distance_in_km = $notStartedDeliveryInfo['travel_distance'];
         $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man']->id;
         $delivery->delivery_status_id = DeliveryStatus::where(
             'status',

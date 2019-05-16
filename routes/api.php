@@ -73,7 +73,9 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::get('delivery_products/delivery/{delivery}', 'DeliveryProductController@byDelivery');
     Route::resource('delivery_products', 'DeliveryProductController');
 
-    Route::get('users/clients/by_email', 'UserController@showClientByEmail');
+    Route::get('users/clients/by_email', 'UserController@showClientByEmail')->name('users.by_email');
+
+    Route::get('statistics/{user}/client_linear_regression', 'StatisticController@client_linear_regression')->name('statistics.client_linear_regression');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {
