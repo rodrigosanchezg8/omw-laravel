@@ -38,7 +38,7 @@ class DeliveryManService
         ])->whereUserId($delivery_man_id)->first();
     }
 
-    public function closestDeliveryManWithTime(Delivery $delivery)
+    public function closestDeliveryManInfo(Delivery $delivery)
     {
         $coords = [];
         $coords['origin_lat'] = $delivery->senderLat;
@@ -64,7 +64,7 @@ class DeliveryManService
                 })
                 ->where('available', 1)->get();
 
-            $closestInfo = $this->closestDeliveryManAndTime($deliveryMen, $coords);
+            $closestInfo = $this->closestGuyInfo($deliveryMen, $coords);
 
             return $closestInfo;
 
@@ -122,11 +122,12 @@ class DeliveryManService
         ])->pluck('id')->toArray();
     }
 
-    private function closestDeliveryManAndTime($deliveryMen, $routeCoords)
+    private function closestGuyInfo($deliveryMen, $routeCoords)
     {
         $closestGuy = null;
         $closestDistance = null;
         $totalTime = 0;
+        $travelDistance = 0;
         foreach ($deliveryMen as $guy) {
             try {
                 $minDistanceFromOrigin = config('constants.min_delivery_man_distance_from_origin');
@@ -153,11 +154,22 @@ class DeliveryManService
                 $timeFromGuyToEndPoint = $fromGuyToEndPoint['time'];
 
                 if ($distanceFromGuyToEndPoint <= $guy->service_range->km && $distanceFromGuyToInitialPoint <= $minDistanceFromOrigin) {
+
                     if ($closestGuy == null || ($distanceFromGuyToInitialPoint < $closestDistance)) {
+
+                        $travelDistance = $this->mapquestService->distanceAndTimeBeginingToEnd([
+                            $routeCoords['origin_lat'],
+                            $routeCoords['origin_lng'],
+                            $routeCoords['destiny_lat'],
+                            $routeCoords['destiny_lng'],
+                        ]);
+
                         $closestDistance = $distanceFromGuyToInitialPoint;
                         $totalTime = $timeFromGuyToInitialPoint + $timeFromGuyToEndPoint;
                         $closestGuy = $guy;
+
                     }
+
                 }
 
             } catch (\Exception $e) {
@@ -173,6 +185,7 @@ class DeliveryManService
         return [
             'delivery_man' => $closestGuy,
             'total_time' => $totalTime,
+            'travel_distance' => $travelDistance,
         ];
 
     }
