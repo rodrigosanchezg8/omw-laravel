@@ -45,4 +45,10 @@ return [
     ],
 
     'min_delivery_man_distance_from_origin' => 15,
+
+    /*Statistic's stuff*/
+    'client_linear_regression_for' => [
+        'only_client' => 0,
+        'only_company' => 1,
+    ],
 ];

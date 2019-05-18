@@ -11,11 +11,17 @@ class StatisticService
 {
     public function monthlyAvgSalesRegression(User $user, $predictionData)
     {
-        if (
-            !$this->clientHasSalesSinceAYear($user, isset($predictionData['for_company']))
-            &&
-            !$this->clientHasSalesSinceHalfYear($user, isset($predictionData['for_company']))
-        ) {
+        $hasSalesSinceAYear = $this->clientHasSalesSinceAYear(
+            $user,
+            isset($predictionData['statistics_for']) ? $predictionData['statistics_for'] : null
+        );
+
+        $hasSalesSinceHalfYear = $this->clientHasSalesSinceHalfYear(
+            $user,
+            isset($predictionData['statistics_for']) ? $predictionData['statistics_for'] : null
+        );
+
+        if (!$hasSalesSinceAYear && !$hasSalesSinceHalfYear) {
             throw new \Exception("El cliente debe tener al menos 6 meses de ventas para poder hacer una prediccion", 1);
         }
 
@@ -28,7 +34,7 @@ class StatisticService
         $dateComparator = null;
         $iterateUntil = 0;
 
-        if ($this->clientHasSalesSinceAYear($user, isset($predictionData['for_company']))) {
+        if ($hasSalesSinceAYear) {
 
             $months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
             $dateComparator = now()->subMonths(11);
@@ -54,8 +60,8 @@ class StatisticService
                                  $query->where('status', config('constants.delivery_statuses.finished'));
                              });
 
-            if (isset($predictionData['for_company'])) {
-                $query->where('company_is_sending', 1);
+            if (isset($predictionData['statistics_for'])) {
+                $query->where('company_is_sending', $predictionData['statistics_for']);
             }
 
             $deliveriesCount[$i] = $query->count();
@@ -83,31 +89,39 @@ class StatisticService
         ];
     }
 
-    private function clientHasSalesSinceAYear(User $user, $for_company = false)
+    private function clientHasSalesSinceAYear(User $user, $statistics_for = null)
     {
         $yearAgo = now()->subMonths(11);
         $halfYearAgo = now()->subMonths(6);
 
         $query = Delivery::whereDate('arrival_date', '>=', $yearAgo->startOfMonth())
-                         ->whereDate('arrival_date', '<=', $halfYearAgo->endOfMonth());
+                         ->whereDate('arrival_date', '<=', $halfYearAgo->endOfMonth())
+                         ->where('sender_id', $user->id)
+                         ->whereHas('deliveryStatus', function ($query) use($user) {
+                             $query->where('status', config('constants.delivery_statuses.finished'));
+                         });
 
-        if ($for_company) {
-            $query->where('company_is_sending', 1);
+        if ($statistics_for != null) {
+            $query->where('company_is_sending', $statistics_for);
         }
 
         return $query->count() > 0;
     }
 
-    private function clientHasSalesSinceHalfYear(User $user, $for_company = false)
+    private function clientHasSalesSinceHalfYear(User $user, $statistics_for = null)
     {
         $halfYearAgo = now()->subMonths(6);
         $now = now();
 
         $query = Delivery::whereDate('arrival_date', '>=', $halfYearAgo->startOfMonth())
-                         ->whereDate('arrival_date', '<=', $now->endOfMonth());
+                         ->whereDate('arrival_date', '<=', $now->endOfMonth())
+                         ->where('sender_id', $user->id)
+                         ->whereHas('deliveryStatus', function ($query) use($user) {
+                             $query->where('status', config('constants.delivery_statuses.finished'));
+                         });
 
-        if ($for_company) {
-            $query->where('company_is_sending', 1);
+        if ($statistics_for != null) {
+            $query->where('company_is_sending', $statistics_for);
         }
 
         return $query->count() > 0;
