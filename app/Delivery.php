@@ -21,10 +21,10 @@ class Delivery extends Model
     public function canChangeToNotStarted()
     {
         return (
-                  $this->deliveryStatus->status == config('constants.delivery_statuses.making')
-                  ||
-                  $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
-               );
+            $this->deliveryStatus->status == config('constants.delivery_statuses.making')
+            ||
+            $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+        );
     }
 
     public function locationTracksCount()
@@ -45,15 +45,15 @@ class Delivery extends Model
     public function getSenderLatAttribute()
     {
         return $this->company_is_sending
-                ? $this->sender->company->location->lat
-                : $this->sender->location->lat;
+            ? $this->sender->company->location->lat
+            : $this->sender->location->lat;
     }
 
     public function getSenderLngAttribute()
     {
         return $this->company_is_sending
-                ? $this->sender->company->location->lng
-                : $this->sender->location->lng;
+            ? $this->sender->company->location->lng
+            : $this->sender->location->lng;
     }
 
     public function getReceiverLatAttribute()
@@ -64,6 +64,11 @@ class Delivery extends Model
     public function getReceiverLngAttribute()
     {
         return $this->receiver->location->lng;
+    }
+
+    public function getDeliveryManFullName()
+    {
+        return $this->deliveryMan()->first()->user()->first()->fullName;
     }
 
     public function deliveryMan()
@@ -96,11 +101,22 @@ class Delivery extends Model
         return $this->hasMany('App\DeliveryProduct');
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'delivery_id', 'id')->with('replier');
+    }
+
+    public function lastMessage()
+    {
+        return $this->hasOne(Message::class, 'delivery_id', 'id')
+            ->orderBy('updated_at', 'desc');
+    }
+
     public function canBeAltered()
     {
         return ($this->deliveryStatus->status == config('constants.delivery_statuses.making')
-                ||
-               $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
+            ||
+            $this->deliveryStatus->status == config('constants.delivery_statuses.not_assigned')
         );
     }
 }

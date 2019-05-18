@@ -69,7 +69,7 @@ class DeliveryManService
             return $closestInfo;
 
         } else {
-            throw new \Exception("No ningún repartidor que trabaje con la distancia proporcionada de: " . $distance, 1);
+            throw new \Exception("No hay algún repartidor que trabaje con la distancia proporcionada de: " . $distance, 1);
         }
     }
 
