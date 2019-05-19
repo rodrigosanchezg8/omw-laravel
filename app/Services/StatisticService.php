@@ -31,6 +31,7 @@ class StatisticService
         $months = [];
         $monthsInDate = [];
         $samples = [];
+        $predictionFunction = [];
         $dateComparator = null;
         $iterateUntil = 0;
 
@@ -76,6 +77,12 @@ class StatisticService
 
         $regression->train($samples, $deliveriesCount);
 
+        for ($i = 0; $i < $iterateUntil; $i++) {
+
+            $predictionFunction[] = $regression->predict([$i]);
+
+        }
+
         $predictionValue = $regression->predict([
             ($iterateUntil - 1) + $predictionData['month_offset'],
         ]);
@@ -84,6 +91,7 @@ class StatisticService
             'months_axis' => $monthsInDate, //X1
             'deliveries_monthly_count' => $deliveriesCount, //Y
             'correlation_rate_x1' => $this->pearson($months, $deliveriesCount),
+            'prediction_function' => $predictionFunction,
             'prediction_month' => now()->addMonths($predictionData['month_offset'])->year. '-'. now()->addMonths($predictionData['month_offset'])->month,
             'prediction_value' => $predictionValue > 0 ? $predictionValue : 0,
         ];
