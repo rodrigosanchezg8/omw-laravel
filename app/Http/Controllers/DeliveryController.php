@@ -153,7 +153,7 @@ class DeliveryController extends Controller
 
             $this->service->checkIfDeliveryHasNotStarted($delivery);
 
-            $closestInfo = $this->deliveryManService->closestDeliveryManWithTime($delivery);
+            $closestInfo = $this->deliveryManService->closestDeliveryManInfo($delivery);
             $delivery = $this->service->setNotStartedDelivery($delivery, $closestInfo);
 
             return response()->json([

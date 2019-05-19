@@ -26,6 +26,7 @@ class CreateDeliveriesTable extends Migration
             $table->integer('delivery_status_id')->unsigned()->default(1);
             $table->decimal('score')->nullable();
             $table->text('comment_by_client')->nullable();
+            $table->decimal('distance_in_km')->nullable();
 
             $table->foreign('delivery_man_id')->references('id')->on('delivery_men');
             $table->foreign('sender_id')->references('id')->on('users');

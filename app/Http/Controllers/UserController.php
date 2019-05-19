@@ -41,7 +41,7 @@ class UserController extends Controller
                 'status' => 200,
                 'header' => 'Éxito',
                 'message' => 'Usuario creado.',
-                'user' => $user
+                'user' => $user,
             ]);
 
         } catch (Exception $e) {
@@ -81,7 +81,7 @@ class UserController extends Controller
             return response()->json([
                 'header' => 'Cliente Encontrado',
                 'status' => 'success',
-                'client' => $user
+                'client' => $user,
             ], 200);
 
         } catch (\Exception $e) {
@@ -104,7 +104,7 @@ class UserController extends Controller
                 'status' => 200,
                 'header' => 'Éxito',
                 'message' => 'Usuario actualizado.',
-                'user' => $user
+                'user' => $user,
             ]);
 
         } catch (\Exception $e) {
@@ -125,7 +125,7 @@ class UserController extends Controller
 
             return response()->json([
                 'header' => 'Usuario Eliminado',
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
         } catch (\Exception $e) {

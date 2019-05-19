@@ -109,7 +109,7 @@ class DeliveryProductController extends Controller
 
             return response()->json([
                 'header' => 'Producto Eliminado',
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
         } catch (\Exception $e) {

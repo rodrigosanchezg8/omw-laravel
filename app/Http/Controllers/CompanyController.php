@@ -43,7 +43,7 @@ class CompanyController extends Controller
                 'header' => 'Éxito',
                 'message' => 'Compañia creada.',
                 'company' => $company,
-                'status' => 200
+                'status' => 200,
             ]);
 
         } catch (Exception $e) {
@@ -105,7 +105,7 @@ class CompanyController extends Controller
 
             return response()->json([
                 'header' => 'Compania borrada',
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
         } catch (\Exception $e) {
