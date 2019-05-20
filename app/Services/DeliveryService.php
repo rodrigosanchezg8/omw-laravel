@@ -74,7 +74,10 @@ class DeliveryService
             $list->where('delivery_status_id', $requestedStatus);
         }
 
-        return $list->get();
+        return $list
+            ->orderBy('id', 'desc')
+            ->limit('50')
+            ->get();
     }
 
     public function create($data)
