@@ -12,7 +12,7 @@ class CompanyService
     public function __construct(
         FileService $fileService,
         LocationService $locationService
-        )
+    )
     {
         $this->fileService = $fileService;
         $this->locationService = $locationService;
@@ -32,10 +32,12 @@ class CompanyService
         $location = $this->locationService->store([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
+            'int_no' => $data['location']['int_no'],
+            'ext_no' => isset($data['location']['ext_no']) ? $data['location']['ext_no'] : null
         ]);
 
         $location->plain_text_address = $this->locationService
-                                             ->getFormattedAddressString($location);
+            ->getFormattedAddressString($location);
 
         $location->save();
 
@@ -67,6 +69,8 @@ class CompanyService
         $location = $this->locationService->store([
             'lat' => $data['location']['lat'],
             'lng' => $data['location']['lng'],
+            'int_no' => $data['location']['int_no'],
+            'ext_no' => isset($data['location']['ext_no']) ? $data['location']['ext_no'] : null
         ]);
 
         $location->plain_text_address = $this->locationService->getFormattedAddressString($location);

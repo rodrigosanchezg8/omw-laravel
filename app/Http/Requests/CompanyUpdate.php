@@ -19,6 +19,7 @@ class CompanyUpdate extends FormRequest
             'description' => 'required',
             'location.lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
             'location.lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
+            'location.int_no' => 'required|numeric',
         ];
     }
 
@@ -33,6 +34,8 @@ class CompanyUpdate extends FormRequest
             'location.lat.regex' => 'La latitud de origen no tiene un formato valido',
             'location.lng.required' => 'La longitud de origen es requerida',
             'location.lng.regex' => 'La longitud de origen no tiene un formato valido',
+            'location.int_no.required' => 'Debe proporcionar un número interior',
+            'location.int_no.numeric' => 'El número interior debe ser numérico',
         ];
     }
 }
