@@ -31,6 +31,7 @@ class UserStore extends FormRequest
             'password' => 'required|confirmed',
             'role.name' => 'required|string',
             'birth_date' => 'date:Y-m-d',
+            'location.int_no' => 'required|numeric',
             'location.lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
             'location.lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
         ];
@@ -50,6 +51,8 @@ class UserStore extends FormRequest
             'phone.required' => 'El telefono del usuario es requerido',
             'phone.digits' => 'El telefono debe contener unicamente 10 digitos',
             'birth_date.date_format' => 'La fecha ingresada no es valida',
+            'location.int_no.required' => 'Debe proporcionar un número interior',
+            'location.int_no.numeric' => 'El número interior debe ser numérico',
             'location.lat.required' => 'La latitud de origen es requerida',
             'location.lat.regex' => 'La latitud de origen no tiene un formato valido',
             'location.lng.required' => 'La longitud de origen es requerida',
