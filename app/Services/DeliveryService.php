@@ -234,8 +234,8 @@ class DeliveryService
 
         $deliveryManFullName = $delivery->getDeliveryManFullName();
         $messageData = new stdClass();
-        $messageData->body = "Tu entrega ha sido asignada a un repartidor. 
-        El nombre del repartidor es $deliveryManFullName. 
+        $messageData->body = "Tu entrega ha sido asignada a un repartidor.
+        El nombre del repartidor es $deliveryManFullName.
         Él comenzará alrededor de: $delivery->planned_start_date y terminará alrededor de: $delivery->planned_end_date";
         $messageData->body = substr($messageData->body, 0, 254);
         $messageData->user_id_receiver = $delivery->receiver_id;

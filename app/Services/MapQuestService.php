@@ -71,7 +71,7 @@ class MapQuestService
         $city = $jsonResponse->results[0]->locations[0]->adminArea4;
         $state = $jsonResponse->results[0]->locations[0]->adminArea3;
         $country = $jsonResponse->results[0]->locations[0]->adminArea1;
-        
-        return $street. ', '. $city. ', '. $state. ', '. $country;
+
+        return $street. ','. $city. ','. $state. ','. $country;
     }
 }

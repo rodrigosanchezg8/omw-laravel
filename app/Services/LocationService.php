@@ -35,7 +35,7 @@ class LocationService
         $coords = [];
         $coords['lat'] = $location->lat;
         $coords['lng'] = $location->lng;
-        
+
         return $this->mapquestService->getFormattedAddressString($coords);
     }
 }

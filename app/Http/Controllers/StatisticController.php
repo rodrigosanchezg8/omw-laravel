@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Requests\AvgSalesRegression;
+use App\Http\Requests\LinearRegressionByCity;
 use App\Services\StatisticService;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,22 @@ class StatisticController extends Controller
                 'status' => 'success',
                 'regression_info' => $regressionInfo,
             ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(). ' '. $e->getFile(). ' '. $e->getLine(),
+            ]);
+
+        }
+    }
+
+    public function linear_regression_by_city(LinearRegressionByCity $request)
+    {
+        try {
+
+            $regressionInfo = $this->service->linearRegressionByCity($request->all());
 
         } catch (\Exception $e) {
 
