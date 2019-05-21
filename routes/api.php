@@ -47,6 +47,8 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::delete('users/{user}', 'UserController@delete')->name('users.delete');
 
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+
+    Route::get('statistics/linear_regression_by_city', 'StatisticController@linear_regression_by_city')->name('statistics.linear_regression_by_city');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
@@ -76,7 +78,6 @@ Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
     Route::get('users/clients/by_email', 'UserController@showClientByEmail')->name('users.by_email');
 
     Route::get('statistics/{user}/client_linear_regression', 'StatisticController@client_linear_regression')->name('statistics.client_linear_regression');
-    Route::get('statistics/linear_regression_by_city', 'StatisticController@linear_regression_by_city')->name('statistics.linear_regression_by_city');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:delivery_man']], function () {

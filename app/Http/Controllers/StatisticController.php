@@ -43,6 +43,12 @@ class StatisticController extends Controller
 
             $regressionInfo = $this->service->linearRegressionByCity($request->all());
 
+            return response()->json([
+                'header' => 'Estadistica encontrada',
+                'status' => 'success',
+                'regression_info' => $regressionInfo,
+                ], 200);
+
         } catch (\Exception $e) {
 
             return response()->json([

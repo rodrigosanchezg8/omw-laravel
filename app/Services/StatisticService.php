@@ -45,11 +45,21 @@ class StatisticService
             isset($regressionParams['statistics_for']) ? $regressionParams['statistics_for'] : null
         );
 
-        if ($deliveries->count() <= 0) {
+        if ($deliveriesByCity->count() <= 0) {
 
             throw new \Exception("No se encontraron entregas para la ciudad seleccionada con los parametros elegidos", 1);
 
         }
+
+        if (isset($regressionParams['statistics_for'])) {
+            $deliveriesByCity->where('company_is_sending', $regressionParams['statistics_for']);
+        }
+
+        return $this->toLinearRegressionData(
+            $deliveriesByCity,
+            $numberOfMounths = 12,
+            $regressionParams['month_offset']
+        );
     }
 
     private function clientHasSalesSinceAYear(User $user, $statistics_for = null)
