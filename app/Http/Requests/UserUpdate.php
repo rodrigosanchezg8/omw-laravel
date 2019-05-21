@@ -20,6 +20,7 @@ class UserUpdate extends FormRequest
             'phone' => 'digits:10',
             'password' => 'string',
             'birth_date' => 'date_format:Y-m-d',
+            'location.int_no' => 'required|numeric',
             'location.lat' => 'required|regex:/^-?\d+(\.\d+)?$/',
             'location.lng' => 'required|regex:/^-?\d+(\.\d+)?$/',
         ];
@@ -40,6 +41,8 @@ class UserUpdate extends FormRequest
             'location.lat.regex' => 'La latitud de origen no tiene un formato valido',
             'location.lng.required' => 'La longitud de origen es requerida',
             'location.lng.regex' => 'La longitud de origen no tiene un formato valido',
+            'location.int_no.required' => 'Debe proporcionar un número interior',
+            'location.int_no.numeric' => 'El número interior debe ser numérico',
         ];
     }
 }

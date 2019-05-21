@@ -10,6 +10,8 @@ class Location extends Model
         'lat',
         'lng',
         'plain_text_address',
+        'int_no',
+        'ext_no',
     ];
 
     public function user()
