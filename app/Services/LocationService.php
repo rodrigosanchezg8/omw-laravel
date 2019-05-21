@@ -53,9 +53,10 @@ class LocationService
 
                     $plainTextaddress = explode(',', $location->plain_text_address);
 
-                    if(isset($plainTextaddress[1])) {
+                    if (isset($plainTextaddress[1])) {
 
-                        $cities[] = $plainTextaddress[1];
+                        if (!array_search($plainTextaddress[1], $cities))
+                            $cities[] = $plainTextaddress[1];
 
                     }
                 }

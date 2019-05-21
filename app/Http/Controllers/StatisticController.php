@@ -31,7 +31,7 @@ class StatisticController extends Controller
 
             return response()->json([
                 'status' => 'failed',
-                'message' => $e->getMessage(). ' '. $e->getFile(). ' '. $e->getLine(),
+                'message' => $e->getMessage(),
             ]);
 
         }
