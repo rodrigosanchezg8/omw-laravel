@@ -38,4 +38,31 @@ class LocationService
 
         return $this->mapquestService->getFormattedAddressString($coords);
     }
+
+    public function currentRegisteredCities()
+    {
+        $cities = [];
+
+        $locations = Location::whereHas('user')->get();
+
+        if ($locations->count() > 0) {
+
+            foreach ($locations as $location) {
+
+                if ($location->plain_text_address != null) {
+
+                    $plainTextaddress = explode(',', $location->plain_text_address);
+
+                    if(isset($plainTextaddress[1])) {
+
+                        $cities[] = $plainTextaddress[1];
+
+                    }
+                }
+
+            }
+        }
+
+        return $cities;
+    }
 }

@@ -11,4 +11,9 @@ class Location extends Model
         'lng',
         'plain_text_address',
     ];
+
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
 }

@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
 
     Route::get('statistics/linear_regression_by_city', 'StatisticController@linear_regression_by_city')->name('statistics.linear_regression_by_city');
+
+    Route::get('locations/current_registered_cities', 'LocationController@current_registered_cities')->name('locations.current_registered_cities');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {
