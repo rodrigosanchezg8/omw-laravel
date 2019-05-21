@@ -32,6 +32,29 @@ class Delivery extends Model
         return $this->locationTracks->count();
     }
 
+    public function scopePlainTextCity($query, $city, $onlySender = null, $onlyCompany = null)
+    {
+        if ($onlyCompany != null) {
+            $query->where('company_is_sending', $onlyCompany);
+        }
+
+        if ($onlySender == null || $onlySender == config('constants.origin_types.sender_flag')) {
+
+            $query->orWhereHas('sender.location', function ($query) use ($city) {
+                $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
+            });
+
+        }
+
+        if ($onlySender == null || $onlySender == config('constants.origin_types.receiver_flag')) {
+
+            $query->orWhereHas('receiver.location', function ($query) use ($city) {
+                $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
+            });
+
+        }
+    }
+
     public function getSenderLocationAttribute()
     {
         return $this->sender->location;

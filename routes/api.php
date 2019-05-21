@@ -33,7 +33,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('deliveries/{delivery}/show', 'DeliveryController@show')->name('deliveries.show');
     Route::put('deliveries/{delivery}/change_status', 'DeliveryController@change_status')->name('deliveries.change_status');
 
-
     Route::get('delivery_men/service_ranges', 'DeliveryManController@get_service_ranges')->name('delivery_men.service_ranges');
     Route::get('delivery_men/{delivery_man}/show', 'DeliveryManController@show')->name('delivery_men.show');
 
@@ -47,6 +46,10 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::delete('users/{user}', 'UserController@delete')->name('users.delete');
 
     Route::delete('companies/{company}', 'CompanyController@delete')->name('companies.delete');
+
+    Route::get('statistics/linear_regression_by_city', 'StatisticController@linear_regression_by_city')->name('statistics.linear_regression_by_city');
+
+    Route::get('locations/current_registered_cities', 'LocationController@current_registered_cities')->name('locations.current_registered_cities');
 });
 
 Route::group(['middleware' => ['auth:api', 'role:admin|client']], function () {

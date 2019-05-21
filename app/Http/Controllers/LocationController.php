@@ -35,4 +35,26 @@ class LocationController extends Controller
 
         }
     }
+
+    public function current_registered_cities()
+    {
+        try {
+
+            $registeredCities = $this->service->currentRegisteredCities();
+
+            return response()->json([
+                'header' => 'Localizaciones encontradas',
+                'status' => 'success',
+                'cities' => $registeredCities,
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ]);
+
+        }
+    }
 }

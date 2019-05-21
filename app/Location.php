@@ -13,4 +13,9 @@ class Location extends Model
         'int_no',
         'ext_no',
     ];
+
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
 }

@@ -22,6 +22,8 @@ return [
     'origin_types' => [
         'sender' => 'sender' ,
         'receiver' => 'receiver',
+        'sender_flag' => 0,
+        'receiver_flag' => 1,
     ],
 
     //Extra Arrival time for deliveries in days
