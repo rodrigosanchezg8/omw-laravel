@@ -41,10 +41,10 @@ class DeliveryManService
     public function closestDeliveryManInfo(Delivery $delivery)
     {
         $coords = [];
-        $coords['origin_lat'] = $delivery->senderLat;
-        $coords['origin_lng'] = $delivery->senderLng;
-        $coords['destiny_lat'] = $delivery->receiverLat;
-        $coords['destiny_lng'] = $delivery->receiverLng;
+        $coords['origin_lat'] = $delivery->senderLat();
+        $coords['origin_lng'] = $delivery->senderLng();
+        $coords['destiny_lat'] = $delivery->receiverLat();
+        $coords['destiny_lng'] = $delivery->receiverLng();
 
         $distance = $this->mapquestService->distanceAndTimeBeginingToEnd($coords)['distance'];
 
@@ -158,10 +158,10 @@ class DeliveryManService
                     if ($closestGuy == null || ($distanceFromGuyToInitialPoint < $closestDistance)) {
 
                         $travelDistance = $this->mapquestService->distanceAndTimeBeginingToEnd([
-                            $routeCoords['origin_lat'],
-                            $routeCoords['origin_lng'],
-                            $routeCoords['destiny_lat'],
-                            $routeCoords['destiny_lng'],
+                            'origin_lat' => $routeCoords['origin_lat'],
+                            'origin_lng' => $routeCoords['origin_lng'],
+                            'destiny_lat' => $routeCoords['destiny_lat'],
+                            'destiny_lng' => $routeCoords['destiny_lng'],
                         ]);
 
                         $closestDistance = $distanceFromGuyToInitialPoint;
@@ -173,7 +173,7 @@ class DeliveryManService
                 }
 
             } catch (\Exception $e) {
-                Log::error("Error finding a route between the guy and the desired point: ". $e->getMessage(). " ". $e->getLine(). " ". $e->getFile());
+                Log::error("Error finding a route between the guy and the desired point: " . $e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
             }
 
         }

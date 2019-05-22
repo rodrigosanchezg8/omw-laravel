@@ -215,13 +215,12 @@ class DeliveryService
         $delivery->planned_end_date = now()->addSeconds($notStartedDeliveryInfo['total_time'])
             ->addDays(config('constants.default_extra_arrival_time'))
             ->toDateTimeString();
-        $delivery->distance_in_km = $notStartedDeliveryInfo['travel_distance'];
-        $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man']->id;
+        $delivery->distance_in_km = $notStartedDeliveryInfo['travel_distance']['distance'];
+        $delivery->delivery_man_id = $notStartedDeliveryInfo['delivery_man']['id'];
         $delivery->delivery_status_id = DeliveryStatus::where(
             'status',
             config('constants.delivery_statuses.not_started')
-        )->first()
-            ->id;
+        )->first()->id;
 
         $delivery->save();
 
@@ -241,7 +240,6 @@ class DeliveryService
         El nombre del repartidor es $deliveryManFullName.
         Él comenzará alrededor de: $delivery->planned_start_date y terminará alrededor de: $delivery->planned_end_date";
         $messageData->body = substr($messageData->body, 0, 254);
-        $messageData->user_id_receiver = $delivery->receiver_id;
         MessageService::create($messageData, $delivery);
 
         return $delivery;

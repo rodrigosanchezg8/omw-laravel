@@ -55,7 +55,7 @@ class LocationService
 
                     if (isset($plainTextaddress[1])) {
 
-                        if (!array_search($plainTextaddress[1], $cities))
+                        if (!in_array($plainTextaddress[1], $cities))
                             $cities[] = $plainTextaddress[1];
 
                     }

@@ -9,6 +9,7 @@ use App\Services\DeliveryManService;
 use App\Http\Requests\DeliveryStore;
 use App\Http\Requests\DeliveryUpdate;
 use App\Http\Requests\DeliveryChangeStatus;
+use Illuminate\Support\Facades\Log;
 
 class DeliveryController extends Controller
 {

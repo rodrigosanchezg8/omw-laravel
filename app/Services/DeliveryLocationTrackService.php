@@ -55,7 +55,6 @@ class DeliveryLocationTrackService
             $messageData->body = "Tu entrega ha sido comenzada por el repartidor $deliveryManFullName en la fecha:
              $delivery->departure_date";
             $messageData->body = substr($messageData->body, 0, 254);
-            $messageData->user_id_receiver = $delivery->receiver_id;
         }
 
         $data['step'] = $delivery->locationTracksCount() + 1;
@@ -67,7 +66,7 @@ class DeliveryLocationTrackService
 
         $data['location_id'] = $location->id;
 
-        if ($this->locationService->distancesAreTooClose($delivery->receiverLocation, $location)) {
+        if ($this->locationService->distancesAreTooClose($delivery->receiver()->first()->location()->first(), $location)) {
             $finishedStatus = DeliveryStatus::finished()->first();
 
             $delivery->deliveryStatus()->dissociate();
@@ -77,7 +76,6 @@ class DeliveryLocationTrackService
 
             $messageData = new stdClass();
             $messageData->body = "Tu entrega ha sido finalizada por el repartidor en la fecha: $delivery->arrival_date";
-            $messageData->user_id_receiver = $delivery->receiver_id;
         }
 
         $deliveryLocationTrack = DeliveryLocationTrack::create($data);

@@ -16,7 +16,7 @@ class LinearRegressionByCity extends FormRequest
     {
         return [
             'month_offset' => 'required|numeric',
-            'city' => 'required|alpha',
+            'city' => 'required',
             'origin_type' => 'digits:1|min:0|max:1',
             'statistics_for' => 'digits:1|min:0|max:1',
         ];

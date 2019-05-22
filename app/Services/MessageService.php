@@ -23,7 +23,6 @@ class MessageService
         $message->body = $request->body;
         $message->delivery()->associate($delivery);
         $message->replier()->associate(Auth::user()->id);
-        $message->receiver()->associate($request->user_id_receiver);
         $message->save();
 
         if (isset($request->file) && $request->file) {

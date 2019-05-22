@@ -55,36 +55,36 @@ class Delivery extends Model
         }
     }
 
-    public function getSenderLocationAttribute()
+    public function senderLocation()
     {
         return $this->sender->location;
     }
 
-    public function getReceiverLocationAttribute()
+    public function receiverLocation()
     {
         return $this->receiver->location;
     }
 
-    public function getSenderLatAttribute()
+    public function senderLat()
     {
         return $this->company_is_sending
             ? $this->sender->company->location->lat
             : $this->sender->location->lat;
     }
 
-    public function getSenderLngAttribute()
+    public function senderLng()
     {
         return $this->company_is_sending
             ? $this->sender->company->location->lng
             : $this->sender->location->lng;
     }
 
-    public function getReceiverLatAttribute()
+    public function receiverLat()
     {
         return $this->receiver->location->lat;
     }
 
-    public function getReceiverLngAttribute()
+    public function receiverLng()
     {
         return $this->receiver->location->lng;
     }

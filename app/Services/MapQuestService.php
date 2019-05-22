@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class MapQuestService
 {
@@ -17,7 +18,7 @@ class MapQuestService
 
     public function distanceAndTimeBeginingToEnd($coords)
     {
-        $url = $this->mapquestBaseUrl. $this->mapquestDistanceMatrixUrl;
+        $url = $this->mapquestBaseUrl . $this->mapquestDistanceMatrixUrl;
         $url = str_replace('mapquestApiKey', $this->mapquestApiKey, $url);
 
         $payload = [
@@ -58,7 +59,7 @@ class MapQuestService
     public function getFormattedAddressString($coords)
     {
         $baseUrl = $this->mapquestBaseUrl;
-        $url = $baseUrl. $this->mapquestReverseGeocoding;
+        $url = $baseUrl . $this->mapquestReverseGeocoding;
         $url = str_replace('mapquestApiKey', $this->mapquestApiKey, $url);
         $url = str_replace('locationLat', $coords['lat'], $url);
         $url = str_replace('locationLng', $coords['lng'], $url);
@@ -72,6 +73,6 @@ class MapQuestService
         $state = $jsonResponse->results[0]->locations[0]->adminArea3;
         $country = $jsonResponse->results[0]->locations[0]->adminArea1;
 
-        return $street. ','. $city. ','. $state. ','. $country;
+        return $street . ',' . $city . ',' . $state . ',' . $country;
     }
 }

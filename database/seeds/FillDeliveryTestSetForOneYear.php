@@ -18,9 +18,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-06-14 02:11:52',
+                'planned_end_date' => '2018-06-14 02:11:52',
                 'arrival_date' => '2018-06-14 02:11:52',
                 'created_at' => '2018-06-14 02:11:52',
                 'updated_at' => '2018-06-14 02:11:52',
@@ -34,9 +37,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-07-14 02:11:52',
+                'planned_end_date' => '2018-07-14 02:11:52',
                 'arrival_date' => '2018-07-14 02:11:52',
                 'created_at' => '2018-07-14 02:11:52',
                 'updated_at' => '2018-07-14 02:11:52',
@@ -50,9 +56,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-08-14 02:11:52',
+                'planned_end_date' => '2018-08-14 02:11:52',
                 'arrival_date' => '2018-08-14 02:11:52',
                 'created_at' => '2018-08-14 02:11:52',
                 'updated_at' => '2018-08-14 02:11:52',
@@ -66,9 +75,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-09-14 02:11:52',
+                'planned_end_date' => '2018-09-14 02:11:52',
                 'arrival_date' => '2018-09-14 02:11:52',
                 'created_at' => '2018-09-14 02:11:52',
                 'updated_at' => '2018-09-14 02:11:52',
@@ -82,9 +94,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-10-14 02:11:52',
+                'planned_end_date' => '2018-10-14 02:11:52',
                 'arrival_date' => '2018-10-14 02:11:52',
                 'created_at' => '2018-10-14 02:11:52',
                 'updated_at' => '2018-10-14 02:11:52',
@@ -98,9 +113,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-11-14 02:11:52',
+                'planned_end_date' => '2018-11-14 02:11:52',
                 'arrival_date' => '2018-11-14 02:11:52',
                 'created_at' => '2018-11-14 02:11:52',
                 'updated_at' => '2018-11-14 02:11:52',
@@ -114,9 +132,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2018-12-14 02:11:52',
+                'planned_end_date' => '2018-12-14 02:11:52',
                 'arrival_date' => '2018-12-14 02:11:52',
                 'created_at' => '2018-12-14 02:11:52',
                 'updated_at' => '2018-12-14 02:11:52',
@@ -130,9 +151,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2019-01-14 02:11:52',
+                'planned_end_date' => '2019-01-14 02:11:52',
                 'arrival_date' => '2019-01-14 02:11:52',
                 'created_at' => '2019-01-14 02:11:52',
                 'updated_at' => '2019-01-14 02:11:52',
@@ -146,9 +170,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2019-02-14 02:11:52',
+                'planned_end_date' => '2019-02-14 02:11:52',
                 'arrival_date' => '2019-02-14 02:11:52',
                 'created_at' => '2019-02-14 02:11:52',
                 'updated_at' => '2019-02-14 02:11:52',
@@ -162,9 +189,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2019-03-14 02:11:52',
+                'planned_end_date' => '2019-03-14 02:11:52',
                 'arrival_date' => '2019-03-14 02:11:52',
                 'created_at' => '2019-03-14 02:11:52',
                 'updated_at' => '2019-03-14 02:11:52',
@@ -178,9 +208,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2019-04-14 02:11:52',
+                'planned_end_date' => '2019-04-14 02:11:52',
                 'arrival_date' => '2019-04-14 02:11:52',
                 'created_at' => '2019-04-14 02:11:52',
                 'updated_at' => '2019-04-14 02:11:52',
@@ -194,9 +227,12 @@ class FillDeliveryTestSetForOneYear extends Seeder
 
             Delivery::create([
                 'sender_id' => 2,
-                'receiver_id' => 3,
-                'company_is_sending' => 1,
+                'receiver_id' => 9,
+                'delivery_man_id' => 5,
+                'company_is_sending' => 0,
                 'delivery_status_id' => 5,
+                'planned_start_date' => '2019-05-14 02:11:52',
+                'planned_end_date' => '2019-05-14 02:11:52',
                 'arrival_date' => '2019-05-14 02:11:52',
                 'created_at' => '2019-05-14 02:11:52',
                 'updated_at' => '2019-05-14 02:11:52',
