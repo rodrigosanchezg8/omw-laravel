@@ -38,17 +38,25 @@ class Delivery extends Model
             $query->where('company_is_sending', $onlyCompany);
         }
 
-        if ($onlySender == null || $onlySender == config('constants.origin_types.sender_flag')) {
+        if ($onlySender == null) {
 
-            $query->orWhereHas('sender.location', function ($query) use ($city) {
+            $query->where(function ($query) use ($city){
+                $query->whereHas('sender.location', function ($query) use ($city) {
+                    $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
+                })->orWhereHas('receiver.location', function ($query) use ($city) {
+                    $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
+                });
+            });
+
+        } else if ($onlySender == config('constants.origin_types.sender_flag')) {
+            Log::error("Aqui ando");
+            $query->whereHas('sender.location', function ($query) use ($city) {
                 $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
             });
 
-        }
+        } else if ($onlySender == config('constants.origin_types.receiver_flag')) {
 
-        if ($onlySender == null || $onlySender == config('constants.origin_types.receiver_flag')) {
-
-            $query->orWhereHas('receiver.location', function ($query) use ($city) {
+            $query->whereHas('receiver.location', function ($query) use ($city) {
                 $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
             });
 

@@ -6,6 +6,7 @@ use App\Delivery;
 use App\User;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Regression\LeastSquares;
+use Illuminate\Support\Facades\Log;
 
 class StatisticService
 {
