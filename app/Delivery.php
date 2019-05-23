@@ -49,7 +49,6 @@ class Delivery extends Model
             });
 
         } else if ($onlySender == config('constants.origin_types.sender_flag')) {
-            Log::error("Aqui ando");
             $query->whereHas('sender.location', function ($query) use ($city) {
                 $query->where('locations.plain_text_address', 'like', '%'. $city. '%');
             });
